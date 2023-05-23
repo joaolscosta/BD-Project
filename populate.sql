@@ -33,7 +33,7 @@ insert into Department (name) VALUES ('Production');
 insert into Workplace (address, lat, long) VALUES ('Rua das flores', '123', '456');
 insert into Workplace (address, lat, long) VALUES ('Rua da Maria', '789', '1010');
 insert into Workplace (address, lat, long) VALUES ('Rua da Lua', '789', '1012');
-insert into Workplace (address, lat, long) VALUES ('Rua da Sol', '789', '1011');
+insert into Workplace (address, lat, long) VALUES ('Rua do Sol', '789', '1011');
 
 insert into Office (address) VALUES ('Rua da Lua');
 insert into Office (address) VALUES ('Rua do Sol');
@@ -75,4 +75,4 @@ insert into supply_contract (TIN, sku) VALUES ((select TIN from Supplier where n
 insert into delivery (address, TIN) VALUES ((select address from Workplace where address = 'Rua das flores'), (select TIN from Supplier where name = 'Goncalo'));
 insert into delivery (address, TIN) VALUES ((select address from Workplace where address = 'Rua da Maria'), (select TIN from Supplier where name = 'Luana'));
 insert into delivery (address, TIN) VALUES ((select address from Workplace where address = 'Rua da Lua'), (select TIN from Supplier where name = 'Rafael'));
-insert into delivery (address, TIN) VALUES ((select address from Workplace where address = 'Rua da Sol'), (select TIN from Supplier where name = 'Ricky'));
+insert into delivery (address, TIN) VALUES ((select address from Workplace where address = 'Rua do Sol'), (select TIN from Supplier where name = 'Ricky'));
