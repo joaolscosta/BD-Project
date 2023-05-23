@@ -67,14 +67,14 @@ FROM
   Product p
 INNER JOIN
   contains cs ON p.sku = cs.sku
-INNER JOIN
-  Sale s ON s.order_no = cs.order_no
 WHERE 
   cs.quantity = (
     SELECT
       MAX(cs.quantity)
     FROM
       contains cs
+    INNER JOIN
+      Sale s ON cs.order_no = s.order_no
 );
 
 /* Exercicio 4 */

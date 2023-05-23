@@ -1,20 +1,20 @@
-DROP TABLE IF EXISTS Customer;
-DROP TABLE IF EXISTS "order";
-DROP TABLE IF EXISTS Sale;
-DROP TABLE IF EXISTS pay;
-DROP TABLE IF EXISTS Employee;
-DROP TABLE IF EXISTS process;
-DROP TABLE IF EXISTS Department;
-DROP TABLE IF EXISTS Workplace;
-DROP TABLE IF EXISTS Office;
-DROP TABLE IF EXISTS Warehouse;
-DROP TABLE IF EXISTS delivery;
-DROP TABLE IF EXISTS works;
-DROP TABLE IF EXISTS Product;
-DROP TABLE IF EXISTS EAN_Product;
-DROP TABLE IF EXISTS contains;
-DROP TABLE IF EXISTS supply_contract;
-DROP TABLE IF EXISTS supplier;
+DROP TABLE IF EXISTS Customer CASCADE;
+DROP TABLE IF EXISTS "order" CASCADE;
+DROP TABLE IF EXISTS Sale CASCADE;
+DROP TABLE IF EXISTS pay CASCADE;
+DROP TABLE IF EXISTS Employee CASCADE;
+DROP TABLE IF EXISTS process CASCADE;
+DROP TABLE IF EXISTS Department CASCADE;
+DROP TABLE IF EXISTS Workplace CASCADE;
+DROP TABLE IF EXISTS Office CASCADE;
+DROP TABLE IF EXISTS Warehouse CASCADE;
+DROP TABLE IF EXISTS delivery CASCADE;
+DROP TABLE IF EXISTS works CASCADE;
+DROP TABLE IF EXISTS Product CASCADE;
+DROP TABLE IF EXISTS EAN_Product CASCADE;
+DROP TABLE IF EXISTS contains CASCADE;
+DROP TABLE IF EXISTS supply_contract CASCADE;
+DROP TABLE IF EXISTS supplier CASCADE;
 
 /* Change this above */
 
@@ -148,21 +148,3 @@ CREATE TABLE delivery(
   FOREIGN KEY(address) REFERENCES Workplace(address),
   FOREIGN KEY(TIN) REFERENCES supply_contract(TIN)
 );
-
-
-/* 
-
-ON DELETE CASCADE - se dermos delete em algum dado da tabela pai, esse
-dado correspondente na tabela filho também vai ser removido
-
-ON DELETE SET NULL - quando removido da tabela pai, na filho fica esse dado
-correspondente set a null.
-
-https://www.youtube.com/watch?v=PlZuYejVU3Q&t=9s
-
-Supostamente temos que usar nas tabelas filho para eliminar o conteudo dela
-indicando a tabela pai que contém essa FK.
-
-
-
-*/
