@@ -1,33 +1,35 @@
-drop table if exists Customer;
-drop table if exists Order;
-drop table if exists Sale;
-drop table if exists pay;
-drop table if exists Employee;
-drop table if exists process;
-drop table if exists Department;
-drop table if exists Workplace;
-drop table if exists Office;
-drop table if exists Warehouse;
-drop table if exists delivery;
-drop table if exists works;
-drop table if exists Product;
-drop table if exists EAN_Product;
-drop table if exists contains;
-drop table if exists supply_contract;
-drop table if exists supplier;
+DROP TABLE IF EXISTS Customer;
+DROP TABLE IF EXISTS "order";
+DROP TABLE IF EXISTS Sale;
+DROP TABLE IF EXISTS pay;
+DROP TABLE IF EXISTS Employee;
+DROP TABLE IF EXISTS process;
+DROP TABLE IF EXISTS Department;
+DROP TABLE IF EXISTS Workplace;
+DROP TABLE IF EXISTS Office;
+DROP TABLE IF EXISTS Warehouse;
+DROP TABLE IF EXISTS delivery;
+DROP TABLE IF EXISTS works;
+DROP TABLE IF EXISTS Product;
+DROP TABLE IF EXISTS EAN_Product;
+DROP TABLE IF EXISTS contains;
+DROP TABLE IF EXISTS supply_contract;
+DROP TABLE IF EXISTS supplier;
+
+/* Change this above */
 
 
 
-create table Customer (
+CREATE TABLE Customer (
     cust_no SERIAL,
     name VARCHAR(80) NOT NULL,
     email VARCHAR(80) NOT NULL UNIQUE,
     phone VARCHAR(40) NOT NULL,
-    address VARCHAR(255) NOT NULL,
+    address VARCHAR(255),
     PRIMARY KEY(cust_no)
 );
 
-create table Order (
+CREATE TABLE "order" (
    order_no SERIAL,
    date DATE NOT NULL,
    cust_no INTEGER NOT NULL,
@@ -35,68 +37,68 @@ create table Order (
    FOREIGN KEY(cust_no) REFERENCES Customer(cust_no)
 );
 
-create table Sale (
-  order_no INTEGER NOT NULL,
+CREATE TABLE Sale (
+  order_no INTEGER,
   PRIMARY KEY(order_no),
-  FOREIGN KEY(order_no) REFERENCES Order(order_no),
+  FOREIGN KEY(order_no) REFERENCES "order"(order_no) ON DELETE CASCADE
 );
 
-create table pay(
-  order_no int NOT NULL,
-  cust_no int NOT NULL,
+CREATE TABLE pay(
+  order_no INTEGER,
+  cust_no INTEGER NOT NULL,
   PRIMARY KEY(order_no),
-  FOREIGN KEY(order_no) REFERENCES Order(order_no),
+  FOREIGN KEY(order_no) REFERENCES "order"(order_no),
   FOREIGN KEY(cust_no) REFERENCES Customer(cust_no)
 );
 
-create table Employee(
-  ssn INTEGER NOT NULL,
+CREATE TABLE Employee(
+  ssn INTEGER,
   TIN INTEGER NOT NULL UNIQUE,
   bdate DATE NOT NULL,
   name VARCHAR(80) NOT NULL,
   PRIMARY KEY (ssn)
 );
 
-create table process(
-  ssn int NOT NULL,
-  order_no int NOT NULL,
-  PRIMARY KEY(ssn, order_no)
+CREATE TABLE process(
+  ssn INTEGER,
+  order_no INTEGER,
+  PRIMARY KEY(ssn, order_no),
   FOREIGN KEY(ssn) REFERENCES Employee(ssn),
-  FOREIGN KEY(order_no) REFERENCES Order(order_no),
+  FOREIGN KEY(order_no) REFERENCES "order"(order_no)
 );
 
-create table Department(
+CREATE TABLE Department(
   name VARCHAR(50),
-  PRIMARY KEY(name),
+  PRIMARY KEY(name)
 );
 
-create table Workplace(
-  address VARCHAR(100)
-  lat VARCHAR(20),
-  long VARCHAR(20),
+CREATE TABLE Workplace(
+  address VARCHAR(100),
+  lat VARCHAR(20) NOT NULL,
+  long VARCHAR(20) NOT NULL,
   PRIMARY KEY(address),
   UNIQUE(lat, long)
 );
 
-Create table Office(
+Create TABLE Office(
   address VARCHAR(100),
   PRIMARY KEY(address),
-  FOREIGN KEY(address) REFERENCES Workplace(address)
+  FOREIGN KEY(address) REFERENCES Workplace(address) ON DELETE CASCADE
 );
 
 CREATE TABLE Warehouse(
   address VARCHAR(100),
   PRIMARY KEY(address),
-  FOREIGN KEY(address) REFERENCES Workplace(address)
+  FOREIGN KEY(address) REFERENCES Workplace(address) ON DELETE CASCADE
 );
 
 CREATE TABLE works(
-  ssn INTEGER NOT NULL,
-  name VARCHAR(50) NOT NULL,
-  address VARCHAR(100) NOT NULL,
+  ssn INTEGER,
+  name VARCHAR(50),
+  address VARCHAR(100),
   PRIMARY KEY(ssn, name, address),
   FOREIGN KEY(ssn) REFERENCES Employee(ssn),
-  FOREIGN KEY(name) REFERENCES Department(name),
+  FOREIGN KEY(name) REFERENCES Department(name), 
   FOREIGN KEY(address) REFERENCES Workplace(address)
 );
 
@@ -109,30 +111,30 @@ CREATE TABLE Product(
 );
 
 CREATE TABLE EAN_Product(
-  sku INTEGER NOT NULL,
-  ean VARCHAR(15) NOT NULL,
+  sku INTEGER,
+  ean VARCHAR(15) NOT NULL UNIQUE,
   PRIMARY KEY(sku),
-  FOREIGN KEY(sku) REFERENCES Product(sku)
+  FOREIGN KEY(sku) REFERENCES Product(sku) ON DELETE CASCADE
 );
 
 CREATE TABLE contains(
-  sku INTEGER NOT NULL,
-  order_no INTEGER NOT NULL,
+  sku INTEGER,
+  order_no INTEGER,
   quantity INTEGER NOT NULL,
   PRIMARY KEY(sku, order_no),
   FOREIGN KEY(sku) REFERENCES Product(sku),
-  FOREIGN KEY(order_no) REFERENCES Order(order_no)
+  FOREIGN KEY(order_no) REFERENCES "order"(order_no)
 );
 
 CREATE TABLE Supplier(
-  TIN INTEGER NOT NULL,
+  TIN INTEGER,
   name VARCHAR(80) NOT NULL,
   address VARCHAR(100) NOT NULL,
   PRIMARY KEY(TIN)
 );
 
 CREATE TABLE supply_contract(
-  TIN INTEGER NOT NULL,
+  TIN INTEGER,
   sku INTEGER NOT NULL,
   PRIMARY KEY(TIN),
   FOREIGN KEY(TIN) REFERENCES Supplier(TIN),
@@ -141,9 +143,9 @@ CREATE TABLE supply_contract(
 
 CREATE TABLE delivery(
   address VARCHAR(100),
-  TIN INTEGER NOT NULL,
+  TIN INTEGER,
   PRIMARY KEY(address, TIN),  
-  FOREIGN KEY(address) REFERENCES Warehouse(address),
+  FOREIGN KEY(address) REFERENCES Workplace(address),
   FOREIGN KEY(TIN) REFERENCES supply_contract(TIN)
 );
 
