@@ -146,3 +146,21 @@ CREATE TABLE delivery(
   FOREIGN KEY(address) REFERENCES Warehouse(address),
   FOREIGN KEY(TIN) REFERENCES supply_contract(TIN)
 );
+
+
+/* 
+
+ON DELETE CASCADE - se dermos delete em algum dado da tabela pai, esse
+dado correspondente na tabela filho também vai ser removido
+
+ON DELETE SET NULL - quando removido da tabela pai, na filho fica esse dado
+correspondente set a null.
+
+https://www.youtube.com/watch?v=PlZuYejVU3Q&t=9s
+
+Supostamente temos que usar nas tabelas filho para eliminar o conteudo dela
+indicando a tabela pai que contém essa FK.
+
+
+
+*/
