@@ -16,8 +16,8 @@ WHERE
 
 /* Exercicio 2 */
 
-CREATE VIEW EJAN2023 AS
-  SELECT DISTINCT
+WITH EJAN2023 AS
+  (SELECT DISTINCT
     e.name
   From
     Employee e
@@ -28,10 +28,10 @@ CREATE VIEW EJAN2023 AS
   WHERE
     o.date > '2022-12-31'
   and
-    o.date < '2023-02-01';
+    o.date < '2023-02-01')
 
-CREATE VIEW EWHA AS 
-  SELECT DISTINCT 
+WITH EWHA AS 
+  (SELECT DISTINCT 
     e.name
   FROM 
     Employee e
@@ -48,7 +48,7 @@ CREATE VIEW EWHA AS
     FROM 
       works w
     JOIN Office o ON w.address = o.address
-  );
+  ))
 
 SELECT DISTINCT
   name
