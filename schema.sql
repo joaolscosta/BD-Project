@@ -35,7 +35,7 @@ CREATE TABLE "order" (
    cust_no INTEGER NOT NULL,
    PRIMARY KEY(order_no),
    FOREIGN KEY(cust_no) REFERENCES Customer(cust_no)
-);
+); -- For each order, there must be an entry in the contains table with the same order_no
 
 CREATE TABLE Sale (
   order_no INTEGER,
@@ -49,7 +49,7 @@ CREATE TABLE pay(
   PRIMARY KEY(order_no),
   FOREIGN KEY(order_no) REFERENCES "order"(order_no),
   FOREIGN KEY(cust_no) REFERENCES Customer(cust_no)
-);
+); -- Customers can only pay for orders they have made
 
 CREATE TABLE Employee(
   ssn INTEGER,
@@ -57,7 +57,7 @@ CREATE TABLE Employee(
   bdate DATE NOT NULL,
   name VARCHAR(80) NOT NULL,
   PRIMARY KEY (ssn)
-);
+); -- For each employee, there must be an entry in the works table with the same ssn
 
 CREATE TABLE process(
   ssn INTEGER,
@@ -65,12 +65,12 @@ CREATE TABLE process(
   PRIMARY KEY(ssn, order_no),
   FOREIGN KEY(ssn) REFERENCES Employee(ssn),
   FOREIGN KEY(order_no) REFERENCES "order"(order_no)
-);
+); 
 
 CREATE TABLE Department(
   name VARCHAR(50),
   PRIMARY KEY(name)
-);
+); 
 
 CREATE TABLE Workplace(
   address VARCHAR(100),
@@ -84,7 +84,7 @@ Create TABLE Office(
   address VARCHAR(100),
   PRIMARY KEY(address),
   FOREIGN KEY(address) REFERENCES Workplace(address) ON DELETE CASCADE
-);
+); 
 
 CREATE TABLE Warehouse(
   address VARCHAR(100),
@@ -100,7 +100,7 @@ CREATE TABLE works(
   FOREIGN KEY(ssn) REFERENCES Employee(ssn),
   FOREIGN KEY(name) REFERENCES Department(name), 
   FOREIGN KEY(address) REFERENCES Workplace(address)
-);
+); 
 
 CREATE TABLE Product(
   sku SERIAL,
@@ -108,14 +108,14 @@ CREATE TABLE Product(
   description VARCHAR(255) NOT NULL,
   price DECIMAL(10,2) NOT NULL,
   PRIMARY KEY(sku)
-);
+); -- For each product, there must be an entry in the supply_contract table with the same sku
 
 CREATE TABLE EAN_Product(
   sku INTEGER,
   ean VARCHAR(15) NOT NULL UNIQUE,
   PRIMARY KEY(sku),
   FOREIGN KEY(sku) REFERENCES Product(sku) ON DELETE CASCADE
-);
+); 
 
 CREATE TABLE contains(
   sku INTEGER,
@@ -131,7 +131,7 @@ CREATE TABLE Supplier(
   name VARCHAR(80) NOT NULL,
   address VARCHAR(100) NOT NULL,
   PRIMARY KEY(TIN)
-);
+); -- For each supplier, there must be an entry in the supply_contract table with the same TIN
 
 CREATE TABLE supply_contract(
   TIN INTEGER,
@@ -139,7 +139,7 @@ CREATE TABLE supply_contract(
   PRIMARY KEY(TIN),
   FOREIGN KEY(TIN) REFERENCES Supplier(TIN),
   FOREIGN KEY(sku) REFERENCES Product(sku)
-);
+); 
 
 CREATE TABLE delivery(
   address VARCHAR(100),
