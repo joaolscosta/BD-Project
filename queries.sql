@@ -75,8 +75,6 @@ FROM
   Product p
 INNER JOIN
   contains cs ON p.sku = cs.sku
-INNER JOIN
-  Sale s ON cs.order_no = s.order_no
 WHERE 
   cs.quantity = (
     SELECT
