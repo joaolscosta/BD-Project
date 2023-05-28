@@ -69,21 +69,38 @@ INTERSECT
     EWHA;
 
 /* Exercicio 3 */
+
+with sold as (
+  SELECT
+    *
+  FROM
+    contains cs
+  INNER JOIN
+    sale s ON cs.order_no = s.order_no
+),
+bestseller as (
+  SELECT
+    s.sku
+  FROM
+    sold s
+  GROUP BY
+    s.sku
+  HAVING 
+    SUM(s.quantity) >= ALL (
+      SELECT
+        SUM(s.quantity)
+      FROM
+        sold s
+      GROUP BY
+        s.sku
+  )
+)
 SELECT DISTINCT
   p.name
 FROM
-  Product p
+  bestseller bs
 INNER JOIN
-  contains cs ON p.sku = cs.sku
-WHERE 
-  cs.quantity = (
-    SELECT
-      MAX(cs.quantity)
-    FROM
-      contains cs
-    INNER JOIN
-      Sale s ON cs.order_no = s.order_no
-);
+  Product p ON bs.sku = p.sku;
 
 /* Exercicio 4 */
 
