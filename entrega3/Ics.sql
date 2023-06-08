@@ -3,7 +3,7 @@ CREATE TRIGGER CheckValidAge
 BEFORE INSERT OR UPDATE ON employee
 FOR EACH ROW
 BEGIN
-  IF (NEW.bdate - date < 18)
+  IF (NEW.bdate - NOW() < 18*365) THEN
     RAISE EXCEPTION 'Employees must be 18 years old';
   END IF;
 END
