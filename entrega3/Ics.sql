@@ -26,3 +26,4 @@ BEGIN
     RAISE EXCEPTION 'Orders must have at least one product!';
   END IF;
 END
+

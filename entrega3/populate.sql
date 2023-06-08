@@ -10,6 +10,12 @@ insert into orders (order_no, date, cust_no) VALUES (7,'2014-01-01', (select cus
 insert into orders (order_no, date, cust_no) VALUES (8,'2023-01-02', (select cust_no from customer where name = 'Costa'));
 insert into orders (order_no, date, cust_no) VALUES (9,'2023-02-02', (select cust_no from customer where name = 'Nunes'));
 insert into orders (order_no, date, cust_no) VALUES (10,'2023-01-03', (select cust_no from customer where name = 'Nunes'));
+insert into orders (order_no, date, cust_no) VALUES (11,'2022-01-03', (select cust_no from customer where name = 'Nunes'));
+insert into orders (order_no, date, cust_no) VALUES (12,'2022-01-04', (select cust_no from customer where name = 'Nunes'));
+insert into orders (order_no, date, cust_no) VALUES (13,'2022-01-04', (select cust_no from customer where name = 'Nunes'));
+insert into orders (order_no, date, cust_no) VALUES (14,'2022-03-04', (select cust_no from customer where name = 'Nunes'));
+insert into orders (order_no, date, cust_no) VALUES (15,'2022-10-04', (select cust_no from customer where name = 'Nunes'));
+
 
 /*
 insert into sale (order_no) VALUES ((select order_no from "order" where date = '2017-01-01'));
@@ -18,6 +24,8 @@ insert into sale (order_no) VALUES ((select order_no from "order" where date = '
 
 insert into pay (order_no, cust_no) VALUES ((select order_no from orders where date = '2017-01-01'), (select cust_no from customer where name = 'Belchior'));
 insert into pay (order_no, cust_no) VALUES ((select order_no from orders where date = '2018-01-01'), (select cust_no from customer where name = 'Nunes'));
+insert into pay (order_no, cust_no) VALUES (11, 2);
+insert into pay (order_no, cust_no) VALUES (12, 2);
 
 insert into employee (ssn, TIN, bdate, name) VALUES ('546654654', '123123123', '2002-04-10', 'Pedrinho');
 insert into employee (ssn, TIN, bdate, name) VALUES ('546654655', '123123124', '2002-02-14', 'Gui');
@@ -28,6 +36,8 @@ insert into process (ssn, order_no) VALUES ((select ssn from employee where name
 insert into process (ssn, order_no) VALUES ((select ssn from employee where name = 'Gui'), (select order_no from orders where date = '2019-01-01'));
 insert into process (ssn, order_no) VALUES ((select ssn from employee where name = 'Gui'), (select order_no from orders where date = '2023-01-03'));
 insert into process (ssn, order_no) VALUES ((select ssn from employee where name = 'Pedrinho'), (select order_no from orders where date = '2014-01-01'));
+insert into process (ssn, order_no) VALUES ((select ssn from employee where name = 'Gui'), 11);
+insert into process (ssn, order_no) VALUES ((select ssn from employee where name = 'Gui'), 12);
 
 /*
 insert into department (name) VALUES ('Sales');
@@ -70,6 +80,12 @@ insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where
 insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), (select order_no from orders where date = '2019-01-01'), 3);
 insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), (select order_no from orders where date = '2023-01-02'), 14);
 insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), (select order_no from orders where date = '2023-01-03'), 3);
+insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 11, 14);
+insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 12, 20);
+insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 13, 2);
+insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 14, 2);
+insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 15, 2);
+
 
 insert into supplier (TIN, name, address, SKU, date) VALUES ('123456789', 'Goncalo', 'Rua das Palmeiras, 7000-007 Évora', (select SKU from product where name = 'Gaming Chair'), '2017-01-01');
 insert into supplier (TIN, name, address, SKU, date) VALUES ('123456788', 'Rafael', 'Avenida do Mar, 8000-008 Faro', (select SKU from product where name = 'Cake'), '2018-01-01');
