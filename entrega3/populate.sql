@@ -1,4 +1,4 @@
-insert into customer (cust_no, name, email, phone, address) VALUES (1,'Belchior', 'belchiorlindo@gmail.com', '912345678', 'Avenida da Liberdade, 2000-002 Santarém');
+insert into customer (cust_no, name, email, phone, address) VALUES (1,'Belchior', 'belchiorlindo@gmail.com', '912345678', 'Avenida da Liberdade, 2000-002 Póvoa de Varzim');
 insert into customer (cust_no, name, email, phone, address) VALUES (2,'Nunes', 'danielnunes@gmail.com', '939393939', 'Travessa dos Pescadores, 3000-003 Coimbra');
 insert into customer (cust_no, name, email, phone, address) VALUES (3,'Costa', 'joaolscosta@gmail.com', '947854684', 'Rua das Flores, 1000-001 Lisboa');
 
