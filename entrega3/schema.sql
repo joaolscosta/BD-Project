@@ -34,7 +34,7 @@ CREATE TABLE orders(
 
 CREATE TABLE pay(
   order_no INTEGER PRIMARY KEY REFERENCES orders,
-  cust_no INTEGER NOT NULL REFERENCES customer,
+  cust_no INTEGER NOT NULL REFERENCES customer
 );
 
 CREATE TABLE employee(
