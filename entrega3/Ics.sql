@@ -13,7 +13,6 @@ CREATE TRIGGER CheckValidAgea
 BEFORE INSERT OR UPDATE ON employee
 FOR EACH ROW EXECUTE PROCEDURE ValidAgea();
 
---Nao tenho a certeza, by : nunes
 
 
 
@@ -49,6 +48,6 @@ $$
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER CheckValidOrder
-BEFORE INSERT OR UPDATE ON orders  -- mudei aqui 'order' para orders, by : nunes
+BEFORE INSERT OR UPDATE ON orders  
 FOR EACH ROW EXECUTE PROCEDURE CheckValidOrder();
 
