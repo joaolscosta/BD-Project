@@ -1,5 +1,5 @@
 --R1:
-CREATE OR REPLACE FUNCTION ValidAgea() RETURNS TRIGGER AS
+CREATE OR REPLACE FUNCTION ValidAge() RETURNS TRIGGER AS
 $$
   BEGIN
     IF ((CURRENT_DATE - 6570) < NEW.bdate ) THEN
@@ -9,9 +9,9 @@ $$
   END
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER CheckValidAgea
+CREATE TRIGGER CheckValidAge
 BEFORE INSERT OR UPDATE ON employee
-FOR EACH ROW EXECUTE PROCEDURE ValidAgea();
+FOR EACH ROW EXECUTE PROCEDURE ValidAge();
 
 --Nao tenho a certeza, by : nunes
 
@@ -49,6 +49,6 @@ $$
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER CheckValidOrder
-BEFORE INSERT OR UPDATE ON orders  -- mudei aqui 'order' para orders, by : nunes
+BEFORE INSERT OR UPDATE ON orders
 FOR EACH ROW EXECUTE PROCEDURE CheckValidOrder();
 
