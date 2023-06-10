@@ -132,3 +132,25 @@ html {
     align-self: start;
     min-width: 10em;
   }
+
+  .navbar {
+    background-color: #333;
+    width: 200px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .navbar a {
+    color: #fff;
+    text-decoration: none;
+    padding: 15px;
+  }
+
+  .navbar a:hover {
+    background-color: #555;
+  }

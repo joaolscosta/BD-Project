@@ -42,8 +42,32 @@ dictConfig(
 app = Flask(__name__)
 log = app.logger
 
-
 @app.route("/", methods=("GET",))
+def index():
+
+    """with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            customers = cur.execute(
+                
+                SELECT cust_no, name, email
+                FROM customer
+                ORDER BY cust_no DESC;
+                ,
+                {},
+            ).fetchall()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+    # API-like response is returned to clients that request JSON explicitly (e.g., fetch)
+    if (
+        request.accept_mimetypes["application/json"]
+        and not request.accept_mimetypes["text/html"]
+    ):
+        return jsonify(customers)"""
+
+    return render_template("index.html")
+
+
+@app.route("/customer_index.html", methods=("GET",))
 def customer_index():
     """Show all the accounts, most recent first."""
 
@@ -66,7 +90,7 @@ def customer_index():
     ):
         return jsonify(customers)
 
-    return render_template("customer/index.html", customers=customers)
+    return render_template("customer/customer_index.html", customers=customers)
 
 
 # @app.route("/accounts/<account_number>/update", methods=("GET", "POST"))
