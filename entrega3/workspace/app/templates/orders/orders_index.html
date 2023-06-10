@@ -1,19 +1,19 @@
 {% extends 'base/page.html' %}
 
 {% block header %}
-  <h1>{% block title %}Customers{% endblock %}</h1>
+  <h1>{% block title %}Orders{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  {% for customer in customers %}
+  {% for order in orders %}
     <article class="post">
       <header>
         <div>
-          <h1>{{ customer['cust_no'] }}</h1>
-          <div class="about">in {{ customer['name'] }}</div>
+          <h1>{{ orders['order_no'] }}</h1>
+          <div class="about">in {{ orders['cust_no'] }}</div>
         </div>
       </header>
-      <p class="body">€ {{ customer['email'] }}</p>
+      <p class="body">€ {{ orders['cust_no'] }}</p>
     </article>
     {% if not loop.last %}
       <hr>
@@ -21,7 +21,7 @@
   {% endfor %}
 
   <div class="card" style="width: 25rem;">
-    <img src="static/img/customer.png" class="card-img-top" alt="...">
+    <img src="static/img/order.png" class="card-img-top" alt="...">
     <div class="card-body">
       <h5 class="card-title">Gostou da aplicação</h5>
       <p class="card-text">ASHJDFHSAFHDSA</p>
