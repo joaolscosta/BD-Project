@@ -13,7 +13,6 @@ CREATE TRIGGER CheckValidAge
 BEFORE INSERT OR UPDATE ON employee
 FOR EACH ROW EXECUTE PROCEDURE ValidAge();
 
---Nao tenho a certeza, by : nunes
 
 
 
