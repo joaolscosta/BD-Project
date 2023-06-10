@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}customers{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% for customer in customers %}
+    <article class="post">
+      <header>
+        <div>
+          <h1>{{ customer['cust_no'] }}</h1>
+          <div class="about">in {{ customer['name'] }}</div>
+        </div>
+      </header>
+      <p class="body">€ {{ customer['email'] }}</p>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+
+  <div class="card" style="width: 25rem;">
+    <img src="https://www.adobe.com/fr/express/feature/image/media_16ad2258cac6171d66942b13b8cd4839f0b6be6f3.png?width=750&format=png&optimize=medium" class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">Gostou da aplicação</h5>
+      <p class="card-text">ASHJDFHSAFHDSA</p>
+      <a href="#" class="btn btn-primary">AASDFS</a>
+    </div>
+  </div>
+
+{% endblock %}
