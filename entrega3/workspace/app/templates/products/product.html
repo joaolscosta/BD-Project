@@ -1,7 +1,102 @@
 {% extends 'base/page.html' %} {% block header %}
 <h1>{% block title %}Product{% endblock %}</h1>
 {% endblock %} {% block content %} 
-{{ product.name }}
-{{ product.description }}
-{{ product.price}}
-{% endblock %}
+<style>
+  .bodyyy {
+    width: 87%;
+    margin: 0 auto;
+  }
+
+    .title-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 30px 0px 30px;
+  }
+
+  .title-bar h1 {
+    font-size: 3rem;
+    font-weight: bold;
+  }
+
+  .headeruwu {
+    margin: 0px 30px 0px 30px;
+  }
+
+  .product-display {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 30px 0px 30px;
+    height: 70%;
+    gap: 30px;
+  }
+
+  .product-display img {
+    width: 450px;
+    height: 450px;
+  }
+
+  .product-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: left;
+    width: 50%;
+    height: fit-content;
+    background-color: #f3f3f3;
+    border-radius: 0.4rem;
+    padding: 20px 30px;
+    gap: 10px;
+  }
+
+  .p-name {
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+
+  .p-desc {
+    font-size: 1.2rem;
+  }
+
+  .p-price {
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .p-sku {
+    font-size: 1rem;
+    color: gray;
+  }
+
+  .p-ean {
+    font-size: 1rem;
+    color: gray;
+  }
+
+</style>
+<div class="bodyyy">
+  <div class="title-bar">
+    <h1>{{product['name']}}</h1>
+    <div class="btns">
+      <a class="btn btn-primary" href="#AddProduct">Edit Product</a>
+      <a class="btn btn-danger" href="#AddProduct">Remove Product</a>
+    </div>
+  </div>
+  <hr class="headeruwu">
+  <div class="product-display">
+    <img src="https://www.continente.pt/dw/image/v2/BDVS_PRD/on/demandware.static/-/Sites-col-master-catalog/default/dwca0ac39d/images/col/688/6881817-frente-com-fatia.jpg?sw=2000&sh=2000" alt="product_image">
+    <div class="product-info">
+      <h2 class="p-name">{{product['name']}}</h2>
+      <p class="p-desc">{{product['description']}}</p>
+      <p class="p-price">€ {{product['price']}}</p>
+      <p class="p-sku">SKU: {{product['sku']}}</p>
+      <p class="p-ean">EAN: {{product['ean']}}</p>
+    </div>
+  </div>
+</div>
+  {% endblock %}

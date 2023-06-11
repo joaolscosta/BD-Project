@@ -157,7 +157,7 @@ def product_detail(sku):
         with conn.cursor(row_factory=namedtuple_row) as cur:
             product = cur.execute(
                 """
-                SELECT SKU, name, price, description
+                SELECT *
                 FROM product
                 WHERE SKU = %(SKU)s;
                 """,
