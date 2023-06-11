@@ -125,6 +125,47 @@ def employee_index():
 
     return render_template("employee/employee_index.html", employees=employees)
 
+@app.route("/products_index.html", methods=("GET",))
+def products_page():
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            products = cur.execute(
+                """
+                SELECT SKU, name, price, description
+                FROM product
+                ORDER BY SKU DESC;
+                """,
+                {},
+            ).fetchall()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+    # API-like response is returned to clients that request JSON explicitly (e.g., fetch)
+    if (
+        request.accept_mimetypes["application/json"]
+        and not request.accept_mimetypes["text/html"]
+    ):
+        return jsonify(products)
+
+    print(products)
+
+    return render_template("products/products_index.html", products=products)
+
+
+@app.route("/products/<sku>/", methods=("GET",))
+def product_detail(sku):
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            product = cur.execute(
+                """
+                SELECT SKU, name, price, description
+                FROM product
+                WHERE SKU = %(SKU)s;
+                """,
+                {"SKU": sku},
+            ).fetchone()
+            log.debug(f"Found {cur.rowcount} rows.")
+    
+    return render_template("products/product.html", product=product)
 
 # @app.route("/accounts/<account_number>/update", methods=("GET", "POST"))
 # def account_update(account_number):

@@ -1,7 +1,7 @@
 {% extends 'base/page.html' %} {% block header %}
 <h1>{% block title %}Orders{% endblock %}</h1>
 {% endblock %} {% block content %} {% for order in orders %}
-<article class="post">
+<article class="post"> <!-- class = post? -->
   <header>
     <div>
       <h1>{{ orders['order_no'] }}</h1>

@@ -1,0 +1,112 @@
+{% extends 'base/page.html' %} {% block header %}
+<h1>{% block title %}Products{% endblock %}</h1>
+{% endblock %} {% block content %} 
+
+<style>
+  .bodyyy {
+    width: 87%;
+    margin: 0 auto;
+  }
+
+  .products-list {
+    margin: 20px 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .product {
+    display: flex;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 2rem;
+    flex-direction: column;
+    align-items: left;
+    justify-content: space-around;
+    width: 370px;
+    margin: 20px 20px;
+    padding: 20px 30px;
+    height: 180px;
+  }
+
+  .p-name {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .f-name {
+    height: 25%;
+  }
+
+  .p-desc {
+    font-size: 1rem;
+    color: gray;
+  }
+
+  .f-desc {
+    margin: 8px 0px 12px 0px;
+    height: 100%;
+    overflow: scroll;
+  }
+
+  .p-price {
+    font-size: 1.7rem;
+    font-weight: bold;
+    padding-bottom: 15px;
+  }
+
+  .f-footer {
+    height: 20%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .title-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 30px 0px 30px;
+  }
+
+  .title-bar h1 {
+    font-size: 3rem;
+    font-weight: bold;
+  }
+
+  .headeruwu {
+    margin: 0px 30px 0px 30px;
+  }
+
+</style>
+
+<div class="bodyyy">
+
+  <div class="title-bar">
+    <h1>Products</h1>
+    <a class="btn btn-primary" href="#AddProduct">Add Product</a>
+  </div>
+  <hr class="headeruwu">
+  <div class="products-list">
+    {% for product in products %}
+    <div class="product">
+      <div class="f-name">
+        <h2 class="p-name">{{ product['name'] }}</h2>
+      </div>
+      <div class="f-desc">
+        <p class="p-desc">{{ product['description'] }}</p>
+      </div>
+      <div class="f-footer">
+        <p class="p-price">€ {{ product['price'] }}</p>
+        <a class="btn btn-primary" href="{{url_for('product_detail', sku=product['sku'])}}"> Check Product</a>
+      </div>
+    </div>
+    {% if not loop.last %}
+    <hr />
+    {% endif %} {% endfor %}
+  </div>
+</div>
+{% endblock %}
