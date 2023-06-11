@@ -64,17 +64,17 @@ CREATE TABLE workplace(
 );
 
 CREATE TABLE office(
-  address VARCHAR(255) PRIMARY KEY REFERENCES workplace
+  address VARCHAR(255) PRIMARY KEY REFERENCES workplace ON DELETE CASCADE
 );
 
 CREATE TABLE warehouse(
-  address VARCHAR(255) PRIMARY KEY REFERENCES workplace
+  address VARCHAR(255) PRIMARY KEY REFERENCES workplace ON DELETE CASCADE
 );
 
 CREATE TABLE works(
   ssn VARCHAR(20) REFERENCES employee,
   name VARCHAR(200) REFERENCES department,
-  address VARCHAR(255) REFERENCES workplace,
+  address VARCHAR(255) REFERENCES workplace ON DELETE CASCADE,
   PRIMARY KEY (ssn, name, address)
 );
 
@@ -102,7 +102,7 @@ CREATE TABLE supplier(
 );
 
 CREATE TABLE delivery(
-  address VARCHAR(255) REFERENCES warehouse,
+  address VARCHAR(255) REFERENCES warehouse ,
   TIN VARCHAR(20) REFERENCES supplier,
   PRIMARY KEY (address, TIN)
 );

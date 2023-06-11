@@ -56,7 +56,7 @@ CREATE TABLE department(
 );
 
 CREATE TABLE workplace(
-  address VARCHAR PRIMARY KEY,
+  address VARCHAR PRIMARY KEY ON DELETE CASCADE,
   lat NUMERIC(8, 6) NOT NULL,
   long NUMERIC(9, 6) NOT NULL,
   UNIQUE(lat, long)

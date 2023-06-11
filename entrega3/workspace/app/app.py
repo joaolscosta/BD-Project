@@ -199,6 +199,20 @@ def workplaces():
 
     return render_template("workplaces/index.html", workplaces=sorted(workplaces, key=lambda workplace: workplace['place'].address))
 
+@app.route("/workplaces/<address>/delete", methods=("POST",))
+def workplace_delete(address):
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            cur.execute(
+                """
+                DELETE FROM workplace 
+                WHERE address = %(address)s;
+                """,
+                {"address": address},
+            )
+            log.debug(f"Deleted {cur.rowcount} rows.")
+
+    return redirect(url_for("workplaces"))
 
 # @app.route("/accounts/<account_number>/update", methods=("GET", "POST"))
 # def account_update(account_number):

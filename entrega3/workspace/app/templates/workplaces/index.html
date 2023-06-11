@@ -4,7 +4,7 @@
 
 <style>
   .bodyyy {
-    width: 87%;
+    width: 89%;
     margin: 0 auto;
   }
 
@@ -28,27 +28,41 @@
   .bodyyy ol {
     margin: 20px 30px 20px 30px;
   }
+
+  .lat-long {
+    width: 70%;
+    justify-self: left;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    margin: auto 0px auto 0px;
+    gap: 20px;
+  }
 </style>
 
 <div class="bodyyy">
   <div class="title-bar">
     <h1>Workplaces</h1>
-    <a class="btn btn-primary" href="#AddWorkplace">Add Workplace</a>
+    <a class="btn btn-outline-primary" href="#AddWorkplace">Add Workplace</a>
   </div>
   <hr class="headeruwu">
   <ol class="list-group list-group-numbered">
     {% for workplace in workplaces %}
-    <li class="list-group-item d-flex justify-content-between align-items-start">
+    <li class="list-group-item d-flex justify-content-around align-items-start">
       <div class="ms-2 me-auto">
         <div class="fw-bold">{{workplace['type']}}</div>
         {{ workplace['place']['address'] }}
       </div>
-      <div class="lat-long d-flex align-items-center">
-        <span class="badge bg-secondary rounded-pill">lat:{{workplace['place']['lat']}}</span>
-        <span class="badge bg-secondary rounded-pill">long: {{workplace['place']['long']}}</span>
+      <div class="lat-long">
+        <span class="badge bg-primary rounded-pill">lat:{{workplace['place']['lat']}}</span>
+        <span class="badge bg-primary rounded-pill">long: {{workplace['place']['long']}}</span>
       </div>
       <div>
-        <a href="###" class="btn btn-danger">-</a>
+        <!-- ESTA PORRA DEIXOU DE FUNCIONAR PORQUE MUDEI PARA FORMS-->
+        <form action="{{ url_for('workplace_delete', address=workplace['place']['address']) }}" method="post">
+          <input class="btn btn-danger remove-btn" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+        </form>
       </div>
     </li>
     {% endfor %}
