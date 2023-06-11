@@ -146,8 +146,6 @@ def products_page():
     ):
         return jsonify(products)
 
-    print(products)
-
     return render_template("products/products_index.html", products=products)
 
 
@@ -171,16 +169,35 @@ def product_detail(sku):
 def workplaces():
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
-            workplaces = cur.execute(
+            offices = cur.execute(
                 """
                 SELECT *
                 FROM workplace
+                JOIN office USING (address)
                 """,
                 {},
             ).fetchall()
             log.debug(f"Found {cur.rowcount} rows.")
-    
-    return render_template("workplaces/index.html", workplaces=workplaces)
+
+            warehouses = cur.execute(
+                """
+                SELECT *
+                FROM Workplace
+                JOIN Warehouse USING (address)
+                """,
+                {},
+            ).fetchall()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+    workplaces = []
+
+    for office in offices:
+        workplaces.append({'place': office, 'type': 'office'})
+            
+    for warehouse in warehouses:
+        workplaces.append({'place': warehouse, 'type': 'warehouse'})
+
+    return render_template("workplaces/index.html", workplaces=sorted(workplaces, key=lambda workplace: workplace['place'].address))
 
 
 # @app.route("/accounts/<account_number>/update", methods=("GET", "POST"))

@@ -36,21 +36,20 @@
     <a class="btn btn-primary" href="#AddWorkplace">Add Workplace</a>
   </div>
   <hr class="headeruwu">
-  <div class="list-group-item d-flex justify-content-between align-items-center">
-    <div class="ms-2 me-auto">
-      <div class="fw-bold">{{class}}</div>
-      Cras justo odio
-    </div>
-    <a href="###" class="btn btn-danger">-</a>
-  </div>
   <ol class="list-group list-group-numbered">
     {% for workplace in workplaces %}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
+    <li class="list-group-item d-flex justify-content-between align-items-start">
       <div class="ms-2 me-auto">
-        <div class="fw-bold">Subheading</div>
-        {{ workplace.name }}
+        <div class="fw-bold">{{workplace['type']}}</div>
+        {{ workplace['place']['address'] }}
       </div>
-      <a href="###" class="btn btn-danger">-</a>
+      <div class="lat-long d-flex align-items-center">
+        <span class="badge bg-secondary rounded-pill">lat:{{workplace['place']['lat']}}</span>
+        <span class="badge bg-secondary rounded-pill">long: {{workplace['place']['long']}}</span>
+      </div>
+      <div>
+        <a href="###" class="btn btn-danger">-</a>
+      </div>
     </li>
     {% endfor %}
   </ol>
