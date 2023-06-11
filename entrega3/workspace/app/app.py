@@ -80,11 +80,11 @@ def orders_index():
 
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
-            orders = cur.execute(
+            contains = cur.execute(
                 """
-                SELECT cust_no, name, email
-                FROM customer
-                ORDER BY cust_no DESC;
+                SELECT order_no, sku, qty
+                FROM contains
+                ORDER BY order_no ;
                 """,
                 {},
             ).fetchall()
@@ -95,9 +95,9 @@ def orders_index():
         request.accept_mimetypes["application/json"]
         and not request.accept_mimetypes["text/html"]
     ):
-        return jsonify(orders)
+        return jsonify(contains)
 
-    return render_template("orders/orders_index.html", orders=orders)
+    return render_template("orders/orders_index.html", contains=contains)
 
 
 @app.route("/employee_index.html", methods=("GET",))

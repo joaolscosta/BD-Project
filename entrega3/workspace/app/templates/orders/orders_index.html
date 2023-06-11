@@ -1,15 +1,117 @@
-{% extends 'base/page.html' %} {% block header %}
+{% extends 'base/page.html' %}
+
+{% block header %}
 <h1>{% block title %}Orders{% endblock %}</h1>
-{% endblock %} {% block content %} {% for order in orders %}
-<article class="post"> <!-- class = post? -->
-  <header>
-    <div>
-      <h1>{{ orders['order_no'] }}</h1>
-      <div class="about">in {{ orders['cust_no'] }}</div>
+{% endblock %}
+
+{% block content %} 
+<style>
+  .bodyyy {
+    width: 87%;
+    margin: 0 auto;
+  }
+  .orders-list {
+    margin: 20px 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .order {
+    display: flex;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 2rem;
+    flex-direction: column;
+    align-items: left;
+    justify-content: space-around;
+    width: 370px;
+    margin: 20px 20px;
+    padding: 20px 30px;
+    height: 180px;
+  }
+
+  .o-number {
+    font-size: 1.5rem;
+  }
+
+  .f-number {
+    height: 25%;
+  }
+
+  .o-sku {
+    font-size: 1rem;
+    color: grey;
+  }
+
+  .f-sku {
+    margin: 8px 0px 12px 0px;
+    height: 100%;
+    overflow: scroll;
+  }
+
+  .o-qty {
+    font-size: 1rem;
+    font-weight: bold;
+    padding-bottom: 15px;
+    color: brown;
+  }
+
+  .f-footer {
+    height: 20%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .title-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 30px 0px 30px;
+  }
+
+  .title-bar h1 {
+    font-size: 3rem;
+    font-weight: bold;
+  }
+
+  .headeruwu {
+    margin: 0px 30px 0px 30px;
+  }
+
+
+
+</style>
+
+<div class="bodyyy">
+  <div class="title-bar">
+    <h1>Orders</h1>
+    <a class="btn btn-primary" href="#AddOrders">Add Orders</a>
+  </div>
+  <hr class="headeruwu">
+  <div class="orders-list">
+    {% for order in contains %}
+    <div class="order">
+      <div class="f-number">
+        <h2 class="o-number"> Order number: {{ order['order_no'] }}</h2>
+      </div>
+      <div class="f-sku">
+        <p class="o-sku">Product SKU: {{ order['sku'] }}</p>
+      </div>
+      <div class="f-footer">
+        <p class="o-qty">Product quantity: {{ order['qty'] }}</p>
+        <a class="btn btn-outline-success" href="#Pay">Pagar</a>
+        <!--falta a mensgaem de pago em vez do botao para pagar-->
+      </div>
     </div>
-  </header>
-  <p class="body">€ {{ orders['cust_no'] }}</p>
-</article>
-{% if not loop.last %}
-<hr />
-{% endif %} {% endfor %} {% endblock %}
+    {% if not loop.last %}
+    <hr />
+    {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
