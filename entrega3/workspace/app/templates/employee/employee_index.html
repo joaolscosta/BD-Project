@@ -1,32 +1,16 @@
-{% extends 'base/page.html' %}
-
-{% block header %}
-  <h1>{% block title %}Employees{% endblock %}</h1>
-{% endblock %}
-
-{% block content %}
-  {% for employee in employees %}
-    <article class="post">
-      <header>
-        <div>
-          <h1>{{ employee['ssn'] }}</h1>
-          <div class="about">in {{ employee['name'] }}</div>
-        </div>
-      </header>
-      <p class="body">€ {{ employee['bdate'] }}</p>
-    </article>
-    {% if not loop.last %}
-      <hr>
-    {% endif %}
-  {% endfor %}
-
-  <div class="card" style="width: 25rem;">
-    <img src="static/img/employee.png" class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">Gostou da aplicação</h5>
-      <p class="card-text">ASHJDFHSAFHDSA</p>
-      <a href="#" class="btn btn-primary">AASDFS</a>
+{% extends 'base/page.html' %} {% block header %}
+<h1>{% block title %}Employees{% endblock %}</h1>
+{% endblock %} {% block content %} {% for employee in employees %}
+<article class="post">
+  <header>
+    <div>
+      <h1>{{ employee['ssn'] }}</h1>
+      <div class="about">in {{ employee['name'] }}</div>
     </div>
-  </div>
-
-{% endblock %}
+  </header>
+  <p class="body">€ {{ employee['bdate'] }}</p>
+</article>
+{% if not loop.last %}
+<hr />
+{% endif %} {% endfor %}
+<ion-icon name="person-outline" id="1"></ion-icon>{% endblock %}
