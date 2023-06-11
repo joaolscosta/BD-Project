@@ -1,0 +1,58 @@
+{% extends 'base/page.html' %} {% block header %}
+<h1>{% block title %}Workplaces{% endblock %}</h1>
+{% endblock %} {% block content %} 
+
+<style>
+  .bodyyy {
+    width: 87%;
+    margin: 0 auto;
+  }
+
+  .title-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 30px 0px 30px;
+  }
+
+  .title-bar h1 {
+    font-size: 3rem;
+    font-weight: bold;
+  }
+
+  .headeruwu {
+    margin: 0px 30px 0px 30px;
+  }
+
+  .bodyyy ol {
+    margin: 20px 30px 20px 30px;
+  }
+</style>
+
+<div class="bodyyy">
+  <div class="title-bar">
+    <h1>Workplaces</h1>
+    <a class="btn btn-primary" href="#AddWorkplace">Add Workplace</a>
+  </div>
+  <hr class="headeruwu">
+  <div class="list-group-item d-flex justify-content-between align-items-center">
+    <div class="ms-2 me-auto">
+      <div class="fw-bold">{{class}}</div>
+      Cras justo odio
+    </div>
+    <a href="###" class="btn btn-danger">-</a>
+  </div>
+  <ol class="list-group list-group-numbered">
+    {% for workplace in workplaces %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div class="ms-2 me-auto">
+        <div class="fw-bold">Subheading</div>
+        {{ workplace.name }}
+      </div>
+      <a href="###" class="btn btn-danger">-</a>
+    </li>
+    {% endfor %}
+  </ol>
+</div>
+{% endblock %}

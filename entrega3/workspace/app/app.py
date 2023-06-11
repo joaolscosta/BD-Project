@@ -167,6 +167,22 @@ def product_detail(sku):
     
     return render_template("products/product.html", product=product)
 
+@app.route("/workplaces.html", methods=("GET",))
+def workplaces():
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            workplaces = cur.execute(
+                """
+                SELECT *
+                FROM workplace
+                """,
+                {},
+            ).fetchall()
+            log.debug(f"Found {cur.rowcount} rows.")
+    
+    return render_template("workplaces/index.html", workplaces=workplaces)
+
+
 # @app.route("/accounts/<account_number>/update", methods=("GET", "POST"))
 # def account_update(account_number):
 #     """Update the account balance."""
