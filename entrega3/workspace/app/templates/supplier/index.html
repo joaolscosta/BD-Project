@@ -66,7 +66,6 @@
         <span class="badge bg-primary rounded-pill">{{supplier['date']}}</span>
       </div>
       <div class="del-btn">
-        <!-- ESTA PORRA DEIXOU DE FUNCIONAR PORQUE MUDEI PARA FORMS-->
         <form action="{{ url_for('supplier_delete', tin=supplier['tin']) }}" method="post">
           <input class="btn btn-danger remove-btn" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
         </form>

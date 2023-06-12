@@ -74,30 +74,35 @@ def customer_index():
 
     return render_template("customer/customer_index.html", customers=customers)
 
-@app.route("/orders_index.html", methods=("GET",))
-def orders_index():
-    """Show all the accounts, most recent first."""
+
+
+@app.route("/orders/<cust_no>", methods=("GET",))
+def orders_index(cust_no):
 
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
             contains = cur.execute(
                 """
                 SELECT order_no, sku, qty
-                FROM contains
+                FROM orders JOIN contains USING (order_no)
+                WHERE cust_no = %(cust_no)s
                 ORDER BY order_no ;
+                """,
+                {"cust_no": cust_no},
+            ).fetchall()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+            pay = cur.execute(
+                """
+                SELECT order_no, cust_no
+                FROM pay
                 """,
                 {},
             ).fetchall()
             log.debug(f"Found {cur.rowcount} rows.")
 
-    # API-like response is returned to clients that request JSON explicitly (e.g., fetch)
-    if (
-        request.accept_mimetypes["application/json"]
-        and not request.accept_mimetypes["text/html"]
-    ):
-        return jsonify(contains)
 
-    return render_template("orders/orders_index.html", contains=contains)
+    return render_template("orders/orders_index.html", contains=contains, pay=pay)
 
 @app.route("/orders/<order_no>/<sku>/", methods=("GET",))
 def order_detail(order_no, sku):
@@ -305,6 +310,36 @@ def supplier_delete(tin):
                 )
 
     return redirect(url_for("suppliers"))
+
+@app.route("/orders/<order_no>/<cust_no>/paid", methods=("POST",))
+def success_payment(order_no, cust_no):
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            cur.execute(
+                """
+                START TRANSACTION;
+                """,
+                {},
+                )
+
+            cur.execute(
+                """
+                INSERT INTO pay (order_no, cust_no)
+                VALUES (%(order_no)s, %(cust_no)s);
+                """,
+                {"order_no": order_no, "cust_no": cust_no, },
+            )
+            log.debug(f"Inserted {cur.rowcount} into pay.")
+
+
+            cur.execute(
+                """
+                COMMIT;
+                """,
+                {},
+                )
+
+    return redirect(url_for("orders"))
 
 # @app.route("/accounts/<account_number>/update", methods=("GET", "POST"))
 # def account_update(account_number):
