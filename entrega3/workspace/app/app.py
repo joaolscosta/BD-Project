@@ -202,8 +202,30 @@ def product_detail(sku):
     
     return render_template("products/product.html", product=product)
 
+@app.route("/products/create", methods=("GET", "POST"))
+def create_product():
+    if request.method == "GET":
+        return render_template("products/create_product.html")
+
+@app.route("/products/<sku>/delete", methods=("POST",))
+def delete_product(sku):
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            product = cur.execute(
+                """
+                DELETE FROM product
+                WHERE SKU = %(SKU)s;
+                """,
+                {"SKU": sku},
+            ).fetchone()
+            log.debug(f"Deleted {cur.rowcount} rows.")
+    
+    return redirect(url_for("products_page"))
+
 @app.route("/supplier.html", methods=("GET",))
 def suppliers():
+
+    
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
             suppliers = cur.execute(
