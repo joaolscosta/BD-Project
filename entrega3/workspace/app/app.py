@@ -49,15 +49,16 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/customer_index.html", methods=("GET",))
-def customer_index():
-    """Show all the accounts, most recent first."""
 
+
+
+@app.route("/order_customer.html", methods=("GET",))
+def order_customer_page():
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
             customers = cur.execute(
                 """
-                SELECT cust_no, name, email
+                SELECT cust_no, name, email, phone
                 FROM customer
                 ORDER BY cust_no DESC;
                 """,
@@ -72,7 +73,7 @@ def customer_index():
     ):
         return jsonify(customers)
 
-    return render_template("customer/customer_index.html", customers=customers)
+    return render_template("orders/order_customer.html", customers=customers)
 
 
 
@@ -327,7 +328,7 @@ def success_payment(order_no, cust_no):
                 INSERT INTO pay (order_no, cust_no)
                 VALUES (%(order_no)s, %(cust_no)s);
                 """,
-                {"order_no": order_no, "cust_no": cust_no, },
+                {"order_no": order_no, "cust_no": cust_no },
             )
             log.debug(f"Inserted {cur.rowcount} into pay.")
 
@@ -425,13 +426,15 @@ def employees_page():
 
     return render_template("employee/employee_index.html", employees=employees)
 
-app.route("/customer_index.html", methods=("GET",))
-def customers_page():
+@app.route("/customer_index.html", methods=("GET",))
+def customer_index():
+    """Show all the accounts, most recent first."""
+
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
             customers = cur.execute(
                 """
-                SELECT cust_no, name, email, phone, adress
+                SELECT cust_no, name, email
                 FROM customer
                 ORDER BY cust_no DESC;
                 """,
