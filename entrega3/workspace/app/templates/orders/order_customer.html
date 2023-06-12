@@ -1,0 +1,100 @@
+{% extends 'base/page.html' %} {% block header %}
+<h1>{% block title %}Customers{% endblock %}</h1>
+{% endblock %} {% block content %}
+
+<style>
+  .body-customer {
+    width: 89%;
+    margin: 0 auto;
+  }
+
+  .customer-list {
+    margin: 20px 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .customer {
+    display: flex;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 2rem;
+    flex-direction: column;
+    align-items: left;
+    justify-content: space-around;
+    width: 370px;
+    margin: 20px 20px;
+    padding: 20px 30px;
+    height: 180px;
+  }
+
+  .f-header {
+    text-transform: uppercase;
+    text-size-adjust: 20rem;
+    height: 20%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .f-footer {
+    height: 20%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .title-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 30px 0px 30px;
+  }
+
+  .title-bar h1 {
+    font-size: 3rem;
+    font-weight: bold;
+  }
+  .title-bar h2 {
+    font-size: 2rem;
+  }
+
+  .header-customer {
+    margin: 0px 30px 0px 30px;
+  }
+</style>
+
+<div class="body-customer">
+  <div class="title-bar">
+    <h1>Choose customer orders</h1>
+  </div>
+  <hr class="header-employee" />
+
+  <div class="container">
+    <div class="customer-list">
+      {% for customer in customers %}
+      <div class="customer">
+        <div class="f-header">
+          <h2>{{ customer.name }}</h2>
+          <h3>Number:{{ customer.cust_no }}</h3>
+        </div>
+        <hr />
+        <div class="f-body">
+          <p>{{ customer.email }}</p>
+          <p>{{ customer.phone }}</p>
+        </div>
+        <div class="f-footer">
+          <a class="btn btn-primary" href="{{url_for('orders_index', cust_no=customer['cust_no'])}}">show orders</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

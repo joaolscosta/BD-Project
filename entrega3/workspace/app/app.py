@@ -49,6 +49,7 @@ def index():
     return render_template("index.html")
 
 
+
 @app.route("/customer_index.html", methods=("GET",))
 def customer_index():
     """Show all the accounts, most recent first."""
@@ -74,17 +75,15 @@ def customer_index():
 
     return render_template("customer/customer_index.html", customers=customers)
 
-@app.route("/orders_index.html", methods=("GET",))
-def orders_index():
-    """Show all the accounts, most recent first."""
-
+@app.route("/order_customer.html", methods=("GET",))
+def order_customer_page():
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
-            contains = cur.execute(
+            customers = cur.execute(
                 """
-                SELECT order_no, sku, qty
-                FROM contains
-                ORDER BY order_no ;
+                SELECT cust_no, name, email, phone
+                FROM customer
+                ORDER BY cust_no DESC;
                 """,
                 {},
             ).fetchall()
@@ -95,7 +94,28 @@ def orders_index():
         request.accept_mimetypes["application/json"]
         and not request.accept_mimetypes["text/html"]
     ):
-        return jsonify(contains)
+        return jsonify(customers)
+
+    return render_template("orders/order_customer.html", customers=customers)
+
+@app.route("/orders/<cust_no>", methods=("GET",))
+def orders_index(cust_no):
+
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            contains = cur.execute(
+                """
+                SELECT order_no, sku, qty
+                FROM orders JOIN contains USING (order_no)
+                WHERE cust_no = %(cust_no)s
+                ORDER BY order_no ;
+                """,
+                {"cust_no": cust_no},
+            ).fetchall()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+
+
 
     return render_template("orders/orders_index.html", contains=contains)
 

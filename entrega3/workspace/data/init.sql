@@ -194,6 +194,8 @@ insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where
 insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 13, 2);
 insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 14, 2);
 insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 15, 2);
+insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 7, 14);
+insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 9, 14);
 
 
 insert into supplier (TIN, name, address, SKU, date) VALUES ('123456789', 'Goncalo', 'Rua das Palmeiras, 7000-007 Évora', (select SKU from product where name = 'Gaming Chair'), '2017-01-01');
