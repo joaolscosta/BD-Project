@@ -101,6 +101,13 @@ def orders_index(cust_no):
             ).fetchall()
             log.debug(f"Found {cur.rowcount} rows.")
 
+    # API-like response is returned to clients that request JSON explicitly (e.g., fetch)
+    if (
+        request.accept_mimetypes["application/json"]
+        and not request.accept_mimetypes["text/html"]
+    ):
+        return jsonify(contains)
+
 
     return render_template("orders/orders_index.html", contains=contains, pay=pay)
 
@@ -286,21 +293,21 @@ def supplier_delete(tin):
 
             cur.execute(
                 """
-                DELETE FROM supplier 
-                WHERE tin = %(tin)s;
-                """,
-                {"tin": tin},
-            )
-            log.debug(f"Deleted {cur.rowcount} from supplier.")
-
-            cur.execute(
-                """
                 DELETE FROM delivery
                 WHERE tin = %(tin)s;
                 """,
                 {"tin": tin},
             )
             log.debug(f"Deleted {cur.rowcount} from delivery.")
+
+            cur.execute(
+                """
+                DELETE FROM supplier 
+                WHERE tin = %(tin)s;
+                """,
+                {"tin": tin},
+            )
+            log.debug(f"Deleted {cur.rowcount} from supplier.")
 
             cur.execute(
                 """
