@@ -165,54 +165,38 @@ def product_detail(sku):
     
     return render_template("products/product.html", product=product)
 
-@app.route("/workplaces.html", methods=("GET",))
-def workplaces():
+@app.route("/supplier.html", methods=("GET",))
+def suppliers():
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
-            offices = cur.execute(
+            suppliers = cur.execute(
                 """
-                SELECT *
-                FROM workplace
-                JOIN office USING (address)
+                SELECT s.name, s.tin, s.address, s.date, p.name as product_name
+                FROM supplier s
+                JOIN product p USING (SKU)
+                ORDER BY TIN ASC;
                 """,
                 {},
             ).fetchall()
             log.debug(f"Found {cur.rowcount} rows.")
 
-            warehouses = cur.execute(
-                """
-                SELECT *
-                FROM Workplace
-                JOIN Warehouse USING (address)
-                """,
-                {},
-            ).fetchall()
-            log.debug(f"Found {cur.rowcount} rows.")
 
-    workplaces = []
+    return render_template("supplier/index.html", suppliers=suppliers)
 
-    for office in offices:
-        workplaces.append({'place': office, 'type': 'office'})
-            
-    for warehouse in warehouses:
-        workplaces.append({'place': warehouse, 'type': 'warehouse'})
-
-    return render_template("workplaces/index.html", workplaces=sorted(workplaces, key=lambda workplace: workplace['place'].address))
-
-@app.route("/workplaces/<address>/delete", methods=("POST",))
-def workplace_delete(address):
+@app.route("/supplier/<tin>/delete", methods=("POST",))
+def supplier_delete(tin):
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
             cur.execute(
                 """
-                DELETE FROM workplace 
-                WHERE address = %(address)s;
+                DELETE FROM supplier 
+                WHERE tin = %(tin)s;
                 """,
-                {"address": address},
+                {"tin": tin},
             )
             log.debug(f"Deleted {cur.rowcount} rows.")
 
-    return redirect(url_for("workplaces"))
+    return redirect(url_for("suppliers"))
 
 # @app.route("/accounts/<account_number>/update", methods=("GET", "POST"))
 # def account_update(account_number):

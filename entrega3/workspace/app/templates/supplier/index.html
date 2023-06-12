@@ -1,5 +1,5 @@
 {% extends 'base/page.html' %} {% block header %}
-<h1>{% block title %}Workplaces{% endblock %}</h1>
+<h1>{% block title %}Suppliers{% endblock %}</h1>
 {% endblock %} {% block content %} 
 
 <style>
@@ -29,6 +29,14 @@
     margin: 20px 30px 20px 30px;
   }
 
+  .del-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: auto 0;
+  }
+
   .lat-long {
     width: 70%;
     justify-self: left;
@@ -36,31 +44,31 @@
     flex-direction: row;
     justify-content: left;
     align-items: center;
-    margin: auto 0px auto 0px;
-    gap: 20px;
+    margin: auto 0px auto 40px;
+    gap: 40px;
   }
 </style>
 
 <div class="bodyyy">
   <div class="title-bar">
-    <h1>Workplaces</h1>
-    <a class="btn btn-outline-primary" href="#AddWorkplace">Add Workplace</a>
+    <h1>suppliers</h1>
+    <a class="btn btn-outline-primary" href="#AddSupplier">Add Supplier</a>
   </div>
   <hr class="headeruwu">
   <ol class="list-group list-group-numbered">
-    {% for workplace in workplaces %}
+    {% for supplier in suppliers %}
     <li class="list-group-item d-flex justify-content-around align-items-start">
       <div class="ms-2 me-auto">
-        <div class="fw-bold">{{workplace['type']}}</div>
-        {{ workplace['place']['address'] }}
+        <div class="fw-bold">{{supplier['name']}}</div>
+        {{ supplier['address'] }}
       </div>
       <div class="lat-long">
-        <span class="badge bg-primary rounded-pill">lat:{{workplace['place']['lat']}}</span>
-        <span class="badge bg-primary rounded-pill">long: {{workplace['place']['long']}}</span>
+        <span class="badge bg-primary rounded-pill">{{supplier['product_name']}}</span>
+        <span class="badge bg-primary rounded-pill">{{supplier['date']}}</span>
       </div>
-      <div>
+      <div class="del-btn">
         <!-- ESTA PORRA DEIXOU DE FUNCIONAR PORQUE MUDEI PARA FORMS-->
-        <form action="{{ url_for('workplace_delete', address=workplace['place']['address']) }}" method="post">
+        <form action="{{ url_for('supplier_delete', tin=supplier['tin']) }}" method="post">
           <input class="btn btn-danger remove-btn" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
         </form>
       </div>
