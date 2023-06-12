@@ -1,6 +1,6 @@
 {% extends 'base/page.html' %} {% block header %}
 <h1>{% block title %}Products{% endblock %}</h1>
-{% endblock %} {% block content %} 
+{% endblock %} {% block content %}
 
 <style>
   .bodyyy {
@@ -80,16 +80,14 @@
   .headeruwu {
     margin: 0px 30px 0px 30px;
   }
-
 </style>
 
 <div class="bodyyy">
-
   <div class="title-bar">
     <h1>Products</h1>
     <a class="btn btn-primary" href="#AddProduct">Add Product</a>
   </div>
-  <hr class="headeruwu">
+  <hr class="headeruwu" />
   <div class="products-list">
     {% for product in products %}
     <div class="product">
@@ -101,7 +99,12 @@
       </div>
       <div class="f-footer">
         <p class="p-price">€ {{ product['price'] }}</p>
-        <a class="btn btn-primary" href="{{url_for('product_detail', sku=product['sku'])}}"> Check Product</a>
+        <a
+          class="btn btn-primary"
+          href="{{url_for('product_detail', sku=product['sku'])}}"
+        >
+          Check Product</a
+        >
       </div>
     </div>
     {% if not loop.last %}
