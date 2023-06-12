@@ -211,14 +211,40 @@ def create_product():
 def delete_product(sku):
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
-            product = cur.execute(
+
+            cur.execute(
+                """
+                START TRANSACTION;
+                """,
+                {},
+                )
+
+            cur.execute(
                 """
                 DELETE FROM product
                 WHERE SKU = %(SKU)s;
                 """,
-                {"SKU": sku},
+                {},
             ).fetchone()
-            log.debug(f"Deleted {cur.rowcount} rows.")
+            log.debug(f"Deleted from product.")
+
+            cur.execute(
+                """
+                DELETE FROM delivery
+                WHERE SKU = %(SKU)s;
+                """,
+                {},
+            ).fetchone()
+            log.debug(f"Deleted from delivery.")
+
+            cur.execute(
+                """
+                COMMIT;
+                """,
+                {},
+                )
+
+
     
     return redirect(url_for("products_page"))
 
@@ -248,12 +274,35 @@ def supplier_delete(tin):
         with conn.cursor(row_factory=namedtuple_row) as cur:
             cur.execute(
                 """
+                START TRANSACTION;
+                """,
+                {},
+                )
+
+            cur.execute(
+                """
                 DELETE FROM supplier 
                 WHERE tin = %(tin)s;
                 """,
                 {"tin": tin},
             )
-            log.debug(f"Deleted {cur.rowcount} rows.")
+            log.debug(f"Deleted {cur.rowcount} from supplier.")
+
+            cur.execute(
+                """
+                DELETE FROM delivery
+                WHERE tin = %(tin)s;
+                """,
+                {"tin": tin},
+            )
+            log.debug(f"Deleted {cur.rowcount} from delivery.")
+
+            cur.execute(
+                """
+                COMMIT;
+                """,
+                {},
+                )
 
     return redirect(url_for("suppliers"))
 
