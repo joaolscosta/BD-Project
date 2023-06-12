@@ -104,7 +104,7 @@
       </div>
       <div class="f-footer">
         <p class="o-qty">Product quantity: {{ order['qty'] }}</p>
-        <a class="btn btn-outline-success" href="#Pay">Pagar</a>
+        <a class="btn btn-outline-success" href="{{url_for('order_detail', order_no=order['order_no'], sku=order['sku'])}}">Pagar</a>
         <!--falta a mensgaem de pago em vez do botao para pagar-->
       </div>
     </div>

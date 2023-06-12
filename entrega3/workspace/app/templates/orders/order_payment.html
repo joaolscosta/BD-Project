@@ -1,0 +1,145 @@
+{% extends 'base/page.html' %}
+
+{% block header %}
+<h1>{% block title %}Payment{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<style>
+  .bodyyy {
+    width: 87%;
+    margin: 0 auto;
+  }
+
+  .payment-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+  }
+
+  .payment-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    font-weight: bold;
+  }
+
+  .form-group input {
+    width: 300px;
+    height: 30px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+
+  .form-group button {
+    width: 100px;
+    height: 40px;
+    margin-top: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .o-number {
+    font-size: 1.5rem;
+    font-weight: bold;;
+    color: darkblue;
+  }
+
+  .f-number {
+    height: 25%;
+  }
+
+  .o-sku {
+    font-size: 1rem;
+    color: grey;
+  }
+
+  .f-sku {
+    margin: 8px 0px 12px 0px;
+    height: 100%;
+  }
+
+  .o-qty {
+    font-size: 1rem;
+    font-weight: italic;
+    padding-bottom: 15px;
+  }
+
+  .f-footer {
+    height: 20%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .alert {
+    display: none;
+  }
+</style>
+
+<div class="bodyyy">
+  <div class="payment-container">
+    <div class="f-number">
+      <h1 class="o-number">Payment for order number: {{contain['order_no']}}</h1>
+    </div>
+    <p class="o-number">{{ product['name'] }}</p>
+    <p class="o-sku">Product SKU: {{ product['sku'] }}</p>
+    <p class="o-qty">Product quantity: {{ contain['qty'] }}</p>
+    <p class="o-qty">€ Product price:  {{ product['price'] }}</p>
+
+    <form class="payment-form" method="post">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <p></p>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="card">Card Number:</label>
+        <p></p>
+        <input type="text" id="card" name="card" required>
+      </div>
+      <div class="f-footer">
+        <p class="o-qty">€ Total price: {{ order['cust_no'] }}</p>
+      </div>
+
+      <button type="submit" class="btn btn-outline-success" id="pay-now-btn">Pay now</button>
+      <div class="alert alert-success alert-dismissable" id="payment-success-alert">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        Successfully paid order
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    $('#pay-now-btn').click(function (e) {
+      e.preventDefault();
+      var name = $('#name').val();
+      var card = $('#card').val();
+
+      if (name.trim() !== '' && card.trim() !== '') {
+        $('#payment-success-alert').show();
+      }
+    });
+  });
+</script>
+{% endblock %}

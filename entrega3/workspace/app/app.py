@@ -99,6 +99,43 @@ def orders_index():
 
     return render_template("orders/orders_index.html", contains=contains)
 
+@app.route("/orders/<order_no>/<sku>/", methods=("GET",))
+def order_detail(order_no, sku):
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            contain = cur.execute(
+                """
+                SELECT *
+                FROM contains
+                WHERE order_no = %(order_no)s;
+                """,
+                {"order_no": order_no},
+            ).fetchone()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+            order = cur.execute(
+                """
+                SELECT *
+                FROM orders
+                WHERE order_no = %(order_no)s;
+                """,
+                {"order_no": order_no},
+            ).fetchone()
+
+            log.debug(f"Found {cur.rowcount} rows.")
+
+            product = cur.execute(
+                """
+                SELECT *
+                FROM product
+                WHERE SKU = %(SKU)s;
+                """,
+                {"SKU": sku},
+            ).fetchone()
+            log.debug(f"Found {cur.rowcount} rows.")
+    
+    return render_template("orders/order_payment.html", contain=contain, order=order, product=product)
+
 
 @app.route("/employee_index.html", methods=("GET",))
 def employee_index():
@@ -259,6 +296,51 @@ def supplier_delete(tin):
 #         conn.commit()
 #     return redirect(url_for("account_index"))
 
+app.route("/employee_index.html", methods=("GET",))
+def employees_page():
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            employees = cur.execute(
+                """
+                SELECT ssn, TIN, bdate, name
+                FROM employee
+                ORDER BY ssn DESC;
+                """,
+                {},
+            ).fetchall()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+    # API-like response is returned to clients that request JSON explicitly (e.g., fetch)
+    if (
+        request.accept_mimetypes["application/json"]
+        and not request.accept_mimetypes["text/html"]
+    ):
+        return jsonify(employees)
+
+    return render_template("employee/employee_index.html", employees=employees)
+
+app.route("/customer_index.html", methods=("GET",))
+def customers_page():
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            customers = cur.execute(
+                """
+                SELECT cust_no, name, email, phone, adress
+                FROM customer
+                ORDER BY cust_no DESC;
+                """,
+                {},
+            ).fetchall()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+    # API-like response is returned to clients that request JSON explicitly (e.g., fetch)
+    if (
+        request.accept_mimetypes["application/json"]
+        and not request.accept_mimetypes["text/html"]
+    ):
+        return jsonify(customers)
+
+    return render_template("customer/customer_index.html", customers=customers)
 
 @app.route("/ping", methods=("GET",))
 def ping():
