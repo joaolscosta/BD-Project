@@ -99,6 +99,43 @@ def orders_index():
 
     return render_template("orders/orders_index.html", contains=contains)
 
+@app.route("/orders/<order_no>/<sku>/", methods=("GET",))
+def order_detail(order_no, sku):
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            contain = cur.execute(
+                """
+                SELECT *
+                FROM contains
+                WHERE order_no = %(order_no)s;
+                """,
+                {"order_no": order_no},
+            ).fetchone()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+            order = cur.execute(
+                """
+                SELECT *
+                FROM orders
+                WHERE order_no = %(order_no)s;
+                """,
+                {"order_no": order_no},
+            ).fetchone()
+
+            log.debug(f"Found {cur.rowcount} rows.")
+
+            product = cur.execute(
+                """
+                SELECT *
+                FROM product
+                WHERE SKU = %(SKU)s;
+                """,
+                {"SKU": sku},
+            ).fetchone()
+            log.debug(f"Found {cur.rowcount} rows.")
+    
+    return render_template("orders/order_payment.html", contain=contain, order=order, product=product)
+
 
 @app.route("/employee_index.html", methods=("GET",))
 def employee_index():
@@ -164,6 +201,8 @@ def product_detail(sku):
             log.debug(f"Found {cur.rowcount} rows.")
     
     return render_template("products/product.html", product=product)
+
+
 
 @app.route("/workplaces.html", methods=("GET",))
 def workplaces():
