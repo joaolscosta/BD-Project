@@ -28,6 +28,7 @@
     margin: 20px 20px;
     padding: 20px 30px;
     height: 180px;
+    position: relative;
   }
 
   .f-header {
@@ -68,6 +69,33 @@
   .header-customer {
     margin: 0px 30px 0px 30px;
   }
+
+  .del-btn {
+    background-color: #ff4d40;
+    border: none;
+    color: white;
+    padding: 7px;
+    padding-left: 12px;
+    padding-right: 12px;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    font-size: 15px;
+    border-radius: 7px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+  }
+
+  .del-btn button {
+    color: white;
+  }
+
+  .del-btn:hover {
+    background: #ff1500;
+    transition: 0.4s;
+  }
 </style>
 
 <div class="body-customer">
@@ -91,8 +119,14 @@
           <p>{{ customer.phone }}</p>
         </div>
         <div class="f-footer">
-          <a class="btn btn-primary" href="#EditCustomer">Edit</a>
-          <a class="btn btn-danger" href="#DeleteCustomer">Delete</a>
+          <div class="del-btn">
+            <form
+              action="{{ url_for('customer_delete', cust_no=customer['cust_no']) }}"
+              method="post"
+            >
+              <button onclick="return confirm('Are you sure?');">Delete</button>
+            </form>
+          </div>
         </div>
       </div>
       {% endfor %}

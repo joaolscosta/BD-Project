@@ -595,6 +595,86 @@ def customer_index():
 def add_customer():
     if request.method == "GET":
         return render_template("customer/add_customer.html")
+    
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+                cur.execute(
+                    """
+                    START TRANSACTION;
+                    """,
+                    {},
+                    )
+    
+                cur.execute(
+                    """
+                    INSERT INTO customer (cust_no, name, email, phone, adress)
+                    VALUES (%(cust_no)s, %(name)s, %(email)s, %(phone)s, %(adress)s);
+                    """,
+                    {
+                        "cust_no": request.form["cust_no"],
+                        "name": request.form["name"],
+                        "email": request.form["email"],
+                        "phone": request.form["phone"],
+                        "adress": request.form["adress"],
+                    },
+                )
+                log.debug(f"Inserted new customer.")
+    
+                cur.execute(
+                    """
+                    COMMIT;
+                    """,
+                    {},
+                    )
+    
+    return redirect(url_for("customer_index"))
+
+@app.route("/customer/<cust_no>/delete", methods=("POST",))
+def customer_delete(tin):
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            cur.execute(
+                """
+                START TRANSACTION;
+                """,
+                {},
+                )
+
+            cur.execute(
+                """
+                DELETE FROM customer
+                WHERE cust_no = %(cust_no)s;
+                """,
+                {"cust_no": cust_no},
+            )
+            log.debug(f"Deleted {cur.rowcount}")
+
+            cur.execute(
+                """
+                DELETE FROM orders 
+                WHERE cust_no = %(cust_no)s;
+                """,
+                {"cust_no": cust_no},
+            )
+            log.debug(f"Deleted {cur.rowcount}")
+            
+            cur.execute(
+                """
+                DELETE FROM pay 
+                WHERE cust_no = %(cust_no)s;
+                """,
+                {"cust_no": cust_no},
+            )
+            log.debug(f"Deleted {cur.rowcount}")
+
+            cur.execute(
+                """
+                COMMIT;
+                """,
+                {},
+                )
+
+    return redirect(url_for("customer_index"))
 
 
 @app.route("/ping", methods=("GET",))
