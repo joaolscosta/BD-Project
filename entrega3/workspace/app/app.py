@@ -12,7 +12,7 @@ from flask import request
 from flask import url_for
 from psycopg.rows import namedtuple_row
 from psycopg_pool import ConnectionPool
-cust_no_count = 0;
+
 
 # postgres://{user}:{password}@{hostname}:{port}/{database-name}
 DATABASE_URL = os.environ.get("DATABASE_URL", "postgres://db:db@postgres/db")
@@ -679,9 +679,6 @@ def customer_index():
                 {},
             ).fetchall()
             log.debug(f"Found {cur.rowcount} rows.")
-
-    if(count > cust_no_count):
-        cust_no_count = count
     
     # API-like response is returned to clients that request JSON explicitly (e.g., fetch)
     if (
@@ -692,8 +689,10 @@ def customer_index():
 
     return render_template("customer/customer_index.html", customers=customers)
 
+cust_no_count = 10;
 @app.route("/customer/add", methods=("GET", "POST"))
 def add_customer():
+    global cust_no_count
     if request.method == "GET":
         return render_template("customer/add_customer.html")
     
@@ -709,15 +708,15 @@ def add_customer():
     
                 cur.execute(
                     """
-                    INSERT INTO customer (cust_no, name, email, phone, adress)
-                    VALUES (%(cust_no)s, %(name)s, %(email)s, %(phone)s, %(adress)s);
+                    INSERT INTO customer (cust_no, name, email, phone, address)
+                    VALUES (%(cust_no)s, %(name)s, %(email)s, %(phone)s, %(address)s);
                     """,
                     {
-                        "cust_no": (cust_no_count+1),
+                        "cust_no": (cust_no_count),
                         "name": request.form["name"],
                         "email": request.form["email"],
                         "phone": request.form["phone"],
-                        "adress": request.form["adress"],
+                        "address": request.form["address"],
                     },
                 )
                 log.debug(f"Inserted new customer.")
