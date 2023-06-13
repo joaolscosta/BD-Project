@@ -458,6 +458,12 @@ def customer_index():
 
     return render_template("customer/customer_index.html", customers=customers)
 
+@app.route("/customer/add", methods=("GET", "POST"))
+def add_customer():
+    if request.method == "GET":
+        return render_template("customer/add_customer.html")
+
+
 @app.route("/ping", methods=("GET",))
 def ping():
     log.debug("ping!")
