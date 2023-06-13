@@ -12,7 +12,7 @@ from flask import request
 from flask import url_for
 from psycopg.rows import namedtuple_row
 from psycopg_pool import ConnectionPool
-
+cust_no_count = 0;
 
 # postgres://{user}:{password}@{hostname}:{port}/{database-name}
 DATABASE_URL = os.environ.get("DATABASE_URL", "postgres://db:db@postgres/db")
@@ -654,15 +654,25 @@ def employees_page():
 
     return render_template("employee/employee_index.html", employees=employees)
 
+
+
 @app.route("/customer_index.html", methods=("GET",))
 def customer_index():
     """Show all the accounts, most recent first."""
 
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
+        
+            count = cur.execute(
+                    """
+                    SELECT COUNT(*)
+                    FROM customer;
+                    """,
+                    ).fetchone()
+            
             customers = cur.execute(
                 """
-                SELECT cust_no, name, email
+                SELECT cust_no, name, email, phone, address
                 FROM customer
                 ORDER BY cust_no DESC;
                 """,
@@ -670,6 +680,9 @@ def customer_index():
             ).fetchall()
             log.debug(f"Found {cur.rowcount} rows.")
 
+    if(count > cust_no_count):
+        cust_no_count = count
+    
     # API-like response is returned to clients that request JSON explicitly (e.g., fetch)
     if (
         request.accept_mimetypes["application/json"]
@@ -686,6 +699,7 @@ def add_customer():
     
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
+                
                 cur.execute(
                     """
                     START TRANSACTION;
@@ -699,7 +713,7 @@ def add_customer():
                     VALUES (%(cust_no)s, %(name)s, %(email)s, %(phone)s, %(adress)s);
                     """,
                     {
-                        "cust_no": request.form["cust_no"],
+                        "cust_no": (cust__no_count+1),
                         "name": request.form["name"],
                         "email": request.form["email"],
                         "phone": request.form["phone"],
@@ -714,7 +728,7 @@ def add_customer():
                     """,
                     {},
                     )
-    
+    cust__no_count+=1;
     return redirect(url_for("customer_index"))
 
 @app.route("/customer/<cust_no>/delete", methods=("POST",))
