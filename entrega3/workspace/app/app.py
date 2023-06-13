@@ -87,6 +87,11 @@ def orders_index(cust_no):
                 SELECT order_no, sku, qty
                 FROM orders JOIN contains USING (order_no)
                 WHERE cust_no = %(cust_no)s
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM pay
+                    WHERE pay.order_no = orders.order_no
+                )
                 ORDER BY order_no ;
                 """,
                 {"cust_no": cust_no},
@@ -97,8 +102,9 @@ def orders_index(cust_no):
                 """
                 SELECT order_no, cust_no
                 FROM pay
+                WHERE cust_no = %(cust_no)s
                 """,
-                {},
+                {"cust_no": cust_no},
             ).fetchall()
             log.debug(f"Found {cur.rowcount} rows.")
 
