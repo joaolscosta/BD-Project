@@ -73,11 +73,20 @@
     font-size: 1.5rem;
   }
 
+  .o-font {
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .o-font-title {
+    font-family: 'Courier New', Courier, monospace;
+    color:#118bd2;
+  }
+
 </style>
 
 <div class="body-customer">
   <div class="title-bar">
-    <h1>Choose customer orders</h1>
+    <h1 class="o-font-title">Choose customer orders</h1>
   </div>
   <hr class="header-employee" />
 
@@ -87,8 +96,8 @@
       <div class="customer">
         <div class="f-header">
           <ion-icon class = o-icon name="person-circle-outline"></ion-icon>
-          <h2>{{ customer.name }}</h2>
-          <h3>Number:{{ customer.cust_no }}</h3>
+          <h2 class="o-font">{{ customer.name }}</h2>
+          <h3 class="o-font">Number:{{ customer.cust_no }}</h3>
         </div>
         <hr />
         <div class="f-body">
