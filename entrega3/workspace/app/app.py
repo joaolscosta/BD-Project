@@ -311,21 +311,75 @@ def delete_product(sku):
 
             cur.execute(
                 """
-                DELETE FROM product
+                DELETE FROM process
+                WHERE order_no IN (
+                    SELECT order_no FROM contains WHERE SKU = %(SKU)s
+                );
+                """,
+                {"SKU": sku},
+            )
+            log.debug(f"Deleted from orders.")
+
+            cur.execute(
+                """
+                DELETE FROM pay
+                WHERE order_no IN (
+                    SELECT order_no FROM contains WHERE SKU = %(SKU)s
+                );
+                """,
+                {"SKU": sku},
+            )
+            log.debug(f"Deleted from orders.")
+
+            cur.execute(
+                """
+                DELETE FROM contains
                 WHERE SKU = %(SKU)s;
                 """,
-                {},
-            ).fetchone()
-            log.debug(f"Deleted from product.")
+                {"SKU": sku},
+            )
+            log.debug(f"Deleted from contains.")
+
+            cur.execute(
+                """
+                DELETE FROM orders
+                WHERE order_no IN (
+                    SELECT order_no FROM contains WHERE SKU = %(SKU)s
+                );
+                """,
+                {"SKU": sku},
+            )
+            log.debug(f"Deleted from orders.")
 
             cur.execute(
                 """
                 DELETE FROM delivery
+                WHERE TIN IN (
+                    SELECT TIN FROM supplier WHERE SKU = %(SKU)s
+                );
+                """,
+                {"SKU": sku},
+            )
+            log.debug(f"Deleted from delivery.")
+
+            cur.execute(
+                """
+                DELETE FROM supplier
                 WHERE SKU = %(SKU)s;
                 """,
-                {},
-            ).fetchone()
-            log.debug(f"Deleted from delivery.")
+                {"SKU": sku},
+            )
+            log.debug(f"Deleted from orders.")
+
+
+            cur.execute(
+                """
+                DELETE FROM product
+                WHERE SKU = %(SKU)s;
+                """,
+                {"SKU": sku},
+            )
+            log.debug(f"Deleted from product.")
 
             cur.execute(
                 """
