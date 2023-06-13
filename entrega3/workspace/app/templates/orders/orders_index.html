@@ -95,14 +95,23 @@
     flex-basis: 50%;
   }
 
+  .o-font {
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .o-font-title {
+    font-family: 'Courier New', Courier, monospace;
+    color:#118bd2;
+  }
+
 </style>
 
 <div class="bodyyy">
   <div class="title-bar">
-    <h1>Orders</h1>
     {% if customer %}
       {% if customer.cust_no %}
-        <a class="btn btn-primary" href="{{ url_for('add_order', cust_no=customer.cust_no) }}">Add Orders</a>
+        <h1 class="o-font-title">{{customer.name}}'s Orders</h1>
+        <a class="btn btn-primary"  href="{{ url_for('add_order', cust_no=customer.cust_no) }}">Add Orders</a>
       {% endif %}
     {% endif %}
 
@@ -114,33 +123,33 @@
       {% for order in contains %}
       <div class="order">
         <div class="f-number">
-          <h2 class="o-number"> Order number: {{ order['order_no'] }}</h2>
+          <p class="o-number o-font"> Order number: {{ order['order_no'] }}</p>
         </div>
         <div class="f-sku">
-          <p class="o-sku">Product SKU: {{ order['sku'] }}</p>
+          <p class="o-sku o-font">Product SKU: {{ order['sku'] }}</p>
         </div>
         <div class="f-footer">
-          <p class="o-qty">Product quantity: {{ order['qty'] }}</p>
+          <p class="o-qty o-font">Product quantity: {{ order['qty'] }}</p>
           <a class="btn btn-outline-success" href="{{url_for('order_detail', order_no=order['order_no'], sku=order['sku'])}}">Pay</a>
         </div>
       </div>
-      <hr />
+      
       {% endfor %}
     </div>
 
+    
     <div class="right-column">
       {% for pa in pay %}
       <div class="order">
         <div class="f-number">
-          <h2 class="o-number"> Order number: {{ pa['order_no'] }}</h2>
+          <p class="o-number o-font"> Order number: {{ pa['order_no'] }}</p>
         </div>
         <div class="f-footer">
-          <h2 class="o-paid">Paid</h2>
+          <h2 class="o-paid o-font">Paid</h2>
           <ion-icon name="bag-check-outline"></ion-icon>
         </div>
       </div>
       {% if not loop.last %}
-      <hr />
       {% endif %}
       {% endfor %}
     </div>

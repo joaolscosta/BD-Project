@@ -101,6 +101,8 @@
             <div class="container">
                 <label for="name"><b>Name: {{ customer.name }}</b></label>
                 <p></p>
+                <label for="name"><b>Number: {{ customer.cust_no }}</b></label>
+                <p></p>
                 <label for="name"><b>Email: {{ customer.email }}</b></label>
                 <p></p>
                 <label for="name"><b>Phone: {{ customer.phone }}</b></label>
@@ -134,7 +136,7 @@
                     <select id="sku" name="sku">
                         <option value="">-- Select a product --</option>
                         {% for product in products %}
-                        <option name="sku">{{ product.sku }}</option>
+                        <option name="sku">{{ product.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
