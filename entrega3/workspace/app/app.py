@@ -713,7 +713,7 @@ def add_customer():
                     VALUES (%(cust_no)s, %(name)s, %(email)s, %(phone)s, %(adress)s);
                     """,
                     {
-                        "cust_no": (cust__no_count+1),
+                        "cust_no": (cust_no_count+1),
                         "name": request.form["name"],
                         "email": request.form["email"],
                         "phone": request.form["phone"],
@@ -728,7 +728,7 @@ def add_customer():
                     """,
                     {},
                     )
-    cust__no_count+=1;
+    cust_no_count+=1;
     return redirect(url_for("customer_index"))
 
 @app.route("/customer/<cust_no>/delete", methods=("POST",))

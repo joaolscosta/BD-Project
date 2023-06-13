@@ -136,7 +136,7 @@
                     <select id="sku" name="sku">
                         <option value="">-- Select a product --</option>
                         {% for product in products %}
-                        <option name="sku">{{ product.name }}</option>
+                        <option value="{{product.sku}}">{{ product.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
