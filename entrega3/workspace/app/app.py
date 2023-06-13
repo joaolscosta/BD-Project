@@ -220,6 +220,77 @@ def create_product():
     if request.method == "GET":
         return render_template("products/create_product.html")
 
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+                cur.execute(
+                    """
+                    START TRANSACTION;
+                    """,
+                    {},
+                    )
+    
+                cur.execute(
+                    """
+                    INSERT INTO product (SKU, name, price, description, ean)
+                    VALUES (%(SKU)s, %(name)s, %(price)s, %(description)s, %(ean)s);
+                    """,
+                    {
+                        "SKU": request.form["sku"],
+                        "name": request.form["name"],
+                        "price": request.form["price"],
+                        "description": request.form["description"],
+                        "ean": request.form["ean"],
+                    },
+                )
+                log.debug(f"Inserted into product.")
+    
+                cur.execute(
+                    """
+                    COMMIT;
+                    """,
+                    {},
+                    )
+    
+    return redirect(url_for("products_page"))
+
+
+@app.route("/products/<sku>/update", methods=("GET", "POST"))
+def update_product(sku):
+    if request.method == "GET":
+        with pool.connection() as conn:
+            with conn.cursor(row_factory=namedtuple_row) as cur:
+                    product = cur.execute(
+                        """
+                        SELECT * from product WHERE SKU = %(SKU)s;
+                        """,
+                        {"SKU": sku},
+                    ).fetchone()
+                    log.debug(f"Found {cur.rowcount} rows.")
+
+        return render_template("products/update_product.html", product=product)
+
+    new_description = request.form["description"]
+    new_price = request.form["price"]
+
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+                cur.execute(
+                    """
+                    UPDATE product
+                    SET description = %(description)s,
+                        price = %(price)s
+                    WHERE SKU = %(SKU)s;
+                    """,
+                    {
+                        "SKU": sku,
+                        "description": new_description,
+                        "price": new_price,
+                    },
+                )
+                log.debug(f"Updated product.")
+    
+    return redirect(url_for("products_page"))
+
 @app.route("/products/<sku>/delete", methods=("POST",))
 def delete_product(sku):
     with pool.connection() as conn:
