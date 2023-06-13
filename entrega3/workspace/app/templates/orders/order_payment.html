@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <style>
@@ -112,7 +112,7 @@
     <p class="o-qty">Product quantity: {{ contain['qty'] }}</p>
     <p class="o-qty">€ Product price:  {{ product['price'] }}</p>
 
-    <form class="payment-form" method="post">
+    <div class="payment-form" method="post">
       <div class="form-group">
         <label for="name">Name:</label>
         <p></p>
@@ -128,36 +128,13 @@
       </div>
 
       <div>
-        <form action="{{ url_for('success_payment', order_no=order['order_no'], cust_no=order['cust_no']) }}" method="post">
+        <form action="{{ url_for('pay_order') }}" method="post">
+          <input type="hidden" name="order_no" value="{{ order['order_no'] }}">
+          <input type="hidden" name="cust_no" value="{{ order['cust_no'] }}">
           <input class="btn btn-outline-success" type="submit" id="pay-now-btn" value="Insert" onclick="return confirm('Are you sure?');">
         </form>
       </div>
-
-
-
-
-
-
-
-      <div class="alert alert-success alert-dismissable notif-container" id="payment-success-alert">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        Successfully paid order
-      </div>
-    </form>
+    </div>
   </div>
 </div>
-
-<script>
-  $(document).ready(function () {
-    $('#pay-now-btn').click(function (e) {
-      e.preventDefault();
-      var name = $('#name').val();
-      var card = $('#card').val();
-
-      if (name.trim() !== '' && card.trim() !== '') {
-        $('#payment-success-alert').show();
-      }
-    });
-  });
-</script>
 {% endblock %}

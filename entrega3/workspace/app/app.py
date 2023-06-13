@@ -319,8 +319,10 @@ def supplier_delete(tin):
 
     return redirect(url_for("suppliers"))
 
-@app.route("/orders/<order_no>/<cust_no>/paid", methods=("POST",))
-def success_payment(order_no, cust_no):
+@app.route("/orders/pay", methods=("POST",))
+def pay_order():
+    order_no = request.form["order_no"]
+    cust_no = request.form["cust_no"]
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
             cur.execute(
@@ -347,7 +349,7 @@ def success_payment(order_no, cust_no):
                 {},
                 )
 
-    return redirect(url_for("orders"))
+    return redirect(url_for("order_customer_page", cust_no=cust_no))
 
 # @app.route("/accounts/<account_number>/update", methods=("GET", "POST"))
 # def account_update(account_number):
