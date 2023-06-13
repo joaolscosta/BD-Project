@@ -311,8 +311,8 @@ def create_order():
                     )
                 
 
-                
                 cur.execute(
+                    
                     """
                     INSERT INTO orders (order_no, cust_no, date)
                     VALUES (%(order_no)s, %(cust_no)s, %(date)s);

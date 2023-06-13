@@ -95,22 +95,26 @@
         <h1 style="text-align: center; margin: 0 auto;">Regist New Order</h1>
     </div>
     {% if customer %}
-        <hr class="headeruwu" />
-        <div class="box">
-            <div class="box-title">Check customer Data</div>
-            <div class="container">
-                <label for="name"><b>Name: {{ customer.name }}</b></label>
-                <p></p>
-                <label for="name"><b>Number: {{ customer.cust_no }}</b></label>
-                <p></p>
-                <label for="name"><b>Email: {{ customer.email }}</b></label>
-                <p></p>
-                <label for="name"><b>Phone: {{ customer.phone }}</b></label>
-                <p></p>
-                <label for="name"><b>Address: {{ customer.address }}</b></label>
-            </div>
+      <hr class="headeruwu" />
+      <div class="box">
+        <div class="box-title">Check customer Data</div>
+        <div class="container">
+          <label for="name"><b>Name: {{ customer.name }}</b></label>
+          <p></p>
+          <label for="name"><b>Number: {{ customer.cust_no }}</b></label>
+          <p></p>
+          <label for="name"><b>Email: {{ customer.email }}</b></label>
+          <p></p>
+          <label for="name"><b>Phone: {{ customer.phone }}</b></label>
+          <p></p>
+          <label for="name"><b>Address: {{ customer.address }}</b></label>
         </div>
-    {% endif %}
+      </div>
+      <!-- Adicione o campo de entrada oculto para enviar o valor de customer.cust_no -->
+      <input type="hidden" name="cust_no" value="{{ customer.cust_no }}">
+    
+    
+    
 
     <hr class="headeruwu" />
     <div class="box">
@@ -121,15 +125,14 @@
                     <span class="input-group-text" id="basic-addon1">Order no</span>
                     <input name="order_no" type="text" class="form-control" aria-describedby="basic-addon1" required>
                 </div>
-                <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">cust no</span>
-                    <input name="cust_no" type="text" class="form-control" aria-describedby="basic-addon1" required>
-                </div>
+
+                <input type="hidden" name="cust_no" value="{{ customer.cust_no }}">
+
                 <div class="input-group mb-3">
                   <span class="input-group-text" id="basic-addon1">Order Date</span>
                   <input name="date" type="text" class="form-control" aria-describedby="basic-addon1" required>
                 </div>
-
+               
 
                 <div>
                     <label for="sku">Select a product:</label>
@@ -149,6 +152,6 @@
             </form>
         </div>
     </div>
-
+    {% endif %}
 </div>
 {% endblock %}
