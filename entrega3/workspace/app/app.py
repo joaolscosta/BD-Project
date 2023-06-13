@@ -102,11 +102,22 @@ def orders_index(cust_no):
                 """
                 SELECT order_no, cust_no
                 FROM pay
-                WHERE cust_no = %(cust_no)s
+                WHERE cust_no = %(cust_no)s;
                 """,
                 {"cust_no": cust_no},
             ).fetchall()
             log.debug(f"Found {cur.rowcount} rows.")
+
+            customer = cur.execute(
+                """
+                SELECT *
+                FROM customer
+                WHERE cust_no = %(cust_no)s;
+                """,
+                {"cust_no": cust_no},
+            ).fetchone()
+
+            log.debug("Found 1 row.")
 
     # API-like response is returned to clients that request JSON explicitly (e.g., fetch)
     if (
@@ -116,7 +127,7 @@ def orders_index(cust_no):
         return jsonify(contains)
 
 
-    return render_template("orders/orders_index.html", contains=contains, pay=pay)
+    return render_template("orders/orders_index.html", contains=contains, pay=pay, customer=customer)
 
 @app.route("/orders/<order_no>/<sku>/", methods=("GET",))
 def order_detail(order_no, sku):
@@ -154,6 +165,32 @@ def order_detail(order_no, sku):
             log.debug(f"Found {cur.rowcount} rows.")
     
     return render_template("orders/order_payment.html", contain=contain, order=order, product=product)
+
+@app.route("/orders/add/<cust_no>", methods=("GET", "POST"))
+def add_order(cust_no):
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            customer = cur.execute(
+                """
+                SELECT *
+                FROM customer
+                WHERE cust_no = %(cust_no)s;
+                """,
+                {"cust_no": cust_no},
+            ).fetchone()
+
+            log.debug("Found 1 row.")
+
+            products = cur.execute(
+                """
+                SELECT *
+                FROM product
+                """,
+                {},
+            ).fetchall()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+    return render_template("orders/add_order.html", customer=customer, products=products)
 
 
 @app.route("/employee_index.html", methods=("GET",))
@@ -258,6 +295,57 @@ def create_product():
                     )
     
     return redirect(url_for("products_page"))
+
+@app.route("/orders/create", methods=("GET", "POST"))
+def create_order():
+    if request.method == "GET":
+        return render_template("orders/create_order.html")
+
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+                cur.execute(
+                    """
+                    START TRANSACTION;
+                    """,
+                    {},
+                    )
+                
+
+                
+                cur.execute(
+                    """
+                    INSERT INTO orders (order_no, cust_no, date)
+                    VALUES (%(order_no)s, %(cust_no)s, %(date)s);
+                    """,
+                    {
+                        "order_no": request.form["order_no"],
+                        "cust_no": request.form["cust_no"],
+                        "date": request.form["date"],
+                    },
+                )
+                log.debug(f"Inserted into orders.")
+
+                cur.execute(
+                    """
+                    INSERT INTO contains (order_no, SKU, qty)
+                    VALUES (%(order_no)s, %(SKU)s, %(qty)s);
+                    """,
+                    {
+                        "order_no": request.form["order_no"],
+                        "SKU": request.form["sku"],
+                        "qty": request.form["qty"],
+                    },
+                )
+                log.debug(f"Inserted into contains.")
+    
+                cur.execute(
+                    """
+                    COMMIT;
+                    """,
+                    {},
+                    )
+    
+    return redirect(url_for("order_customer_page"))
 
 
 @app.route("/products/<sku>/update", methods=("GET", "POST"))
@@ -630,7 +718,7 @@ def add_customer():
     return redirect(url_for("customer_index"))
 
 @app.route("/customer/<cust_no>/delete", methods=("POST",))
-def customer_delete(tin):
+def customer_delete(cust_no):
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
             cur.execute(

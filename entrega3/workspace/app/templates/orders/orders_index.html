@@ -46,7 +46,6 @@
   .f-sku {
     margin: 8px 0px 12px 0px;
     height: 100%;
-    overflow: scroll;
   }
 
   .o-qty {
@@ -54,6 +53,13 @@
     font-weight: bold;
     padding-bottom: 15px;
     color: brown;
+  }
+
+  .o-paid {
+    font-size: 2rem;
+    font-weight: bold;
+    padding-bottom: 15px;
+    color: green;
   }
 
   .f-footer {
@@ -94,7 +100,13 @@
 <div class="bodyyy">
   <div class="title-bar">
     <h1>Orders</h1>
-    <a class="btn btn-primary" href="#AddOrders">Add Orders</a>
+    {% if customer %}
+      {% if customer.cust_no %}
+        <a class="btn btn-primary" href="{{ url_for('add_order', cust_no=customer.cust_no) }}">Add Orders</a>
+      {% endif %}
+    {% endif %}
+
+    
   </div>
   <hr class="headeruwu">
   <div class="orders-list">
@@ -110,12 +122,9 @@
         <div class="f-footer">
           <p class="o-qty">Product quantity: {{ order['qty'] }}</p>
           <a class="btn btn-outline-success" href="{{url_for('order_detail', order_no=order['order_no'], sku=order['sku'])}}">Pay</a>
-          <!--falta a mensgaem de pago em vez do botao para pagar-->
         </div>
       </div>
-      {% if not loop.last %}
       <hr />
-      {% endif %}
       {% endfor %}
     </div>
 
@@ -123,10 +132,11 @@
       {% for pa in pay %}
       <div class="order">
         <div class="f-number">
-          <p class="o-number"> Order number: {{ pa['order_no'] }}</p>
+          <h2 class="o-number"> Order number: {{ pa['order_no'] }}</h2>
         </div>
-        <div class="f-number">
-          <p class="o-number">custo pagamentoooooooo: {{ pa['cust_no'] }}</p>
+        <div class="f-footer">
+          <h2 class="o-paid">Paid</h2>
+          <ion-icon name="bag-check-outline"></ion-icon>
         </div>
       </div>
       {% if not loop.last %}

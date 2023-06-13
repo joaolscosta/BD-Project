@@ -68,6 +68,11 @@
   .header-customer {
     margin: 0px 30px 0px 30px;
   }
+
+  .o-icon {
+    font-size: 1.5rem;
+  }
+
 </style>
 
 <div class="body-customer">
@@ -81,6 +86,7 @@
       {% for customer in customers %}
       <div class="customer">
         <div class="f-header">
+          <ion-icon class = o-icon name="person-circle-outline"></ion-icon>
           <h2>{{ customer.name }}</h2>
           <h3>Number:{{ customer.cust_no }}</h3>
         </div>

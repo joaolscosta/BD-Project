@@ -1,0 +1,152 @@
+ {% extends 'base/page.html' %} {% block header %}
+<h1>{% block title %}Create Customer{% endblock %}</h1>
+{% endblock %} {% block content %}
+
+<style>
+  .bodyyy {
+    width: 89%;
+    margin: 0 auto;
+  }
+
+  .title-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 30px 0px 30px;
+  }
+
+  .title-bar h1 {
+    margin-left: 34%;
+    font-size: 3rem;
+    font-weight: bold;
+  }
+
+  .headeruwu {
+    margin: 0px 30px 0px 30px;
+  }
+
+  .form-body {
+    margin: 20px 30px 0px 30px;
+  }
+
+  .box {
+    background: #eef0f1;
+    border: 2px solid white;
+    border-radius: 30px;
+    display: flex;
+    width: 50%;
+    margin-left: 25%;
+    flex-direction: column;
+    padding: 10px;
+    margin-top: 70px;
+  }
+
+  .box-title {
+    margin-left: 0.5%;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+
+  .container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .container label {
+    margin-top: 20px;
+  }
+
+  .container input {
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .box button {
+    width: 100px;
+    height: 40px;
+    margin-top: 10px;
+    background-color: #4c95af;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    margin-left: 44%;
+    padding-bottom: 3px;
+    margin-bottom: 10px;
+  }
+
+  .box button:hover {
+    background-color: #155871;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: 0.4s;
+  }
+</style>
+
+<div class="bodyyy">
+    <div class="title-bar">
+        <h1 style="text-align: center; margin: 0 auto;">Regist New Order</h1>
+    </div>
+    {% if customer %}
+        <hr class="headeruwu" />
+        <div class="box">
+            <div class="box-title">Check customer Data</div>
+            <div class="container">
+                <label for="name"><b>Name: {{ customer.name }}</b></label>
+                <p></p>
+                <label for="name"><b>Email: {{ customer.email }}</b></label>
+                <p></p>
+                <label for="name"><b>Phone: {{ customer.phone }}</b></label>
+                <p></p>
+                <label for="name"><b>Address: {{ customer.address }}</b></label>
+            </div>
+        </div>
+    {% endif %}
+
+    <hr class="headeruwu" />
+    <div class="box">
+        <div class="box-title">Regist order</div>
+        <div class="container">
+            <form action="{{url_for('create_order')}}" method="POST">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Order no</span>
+                    <input name="order_no" type="text" class="form-control" aria-describedby="basic-addon1" required>
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">cust no</span>
+                    <input name="cust_no" type="text" class="form-control" aria-describedby="basic-addon1" required>
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="basic-addon1">Order Date</span>
+                  <input name="date" type="text" class="form-control" aria-describedby="basic-addon1" required>
+                </div>
+
+
+                <div>
+                    <label for="sku">Select a product:</label>
+                    <select id="sku" name="sku">
+                        <option value="">-- Select a product --</option>
+                        {% for product in products %}
+                        <option name="sku">{{ product.sku }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Qty</span>
+                  <input name="qty" type="number">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
