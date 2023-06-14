@@ -54,8 +54,19 @@ def index():
 
 @app.route("/order_customer.html", methods=("GET",))
 def order_customer_page():
+
+    global order_no_count
+
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
+            count = cur.execute(
+                    """
+                    SELECT COUNT(*) as count
+                    FROM orders;
+                    """,
+                    ).fetchone()
+            
+
             customers = cur.execute(
                 """
                 SELECT cust_no, name, email, phone
@@ -65,6 +76,10 @@ def order_customer_page():
                 {},
             ).fetchall()
             log.debug(f"Found {cur.rowcount} rows.")
+
+
+    if order_no_count < count[0]:
+        order_no_count = count[0]
 
     # API-like response is returned to clients that request JSON explicitly (e.g., fetch)
     if (
@@ -296,10 +311,15 @@ def create_product():
     
     return redirect(url_for("products_page"))
 
+order_no_count = 0;
 @app.route("/orders/create", methods=("GET", "POST"))
 def create_order():
+    global order_no_count
     if request.method == "GET":
         return render_template("orders/create_order.html")
+    
+    selected_products = request.form.getlist('selected_products[]')
+    quantities = request.form.getlist('quantities[]')
 
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
@@ -318,25 +338,27 @@ def create_order():
                     VALUES (%(order_no)s, %(cust_no)s, %(date)s);
                     """,
                     {
-                        "order_no": request.form["order_no"],
+                        "order_no": order_no_count + 1,
                         "cust_no": request.form["cust_no"],
                         "date": request.form["date"],
                     },
                 )
                 log.debug(f"Inserted into orders.")
 
-                cur.execute(
-                    """
-                    INSERT INTO contains (order_no, SKU, qty)
-                    VALUES (%(order_no)s, %(SKU)s, %(qty)s);
-                    """,
-                    {
-                        "order_no": request.form["order_no"],
-                        "SKU": request.form["sku"],
-                        "qty": request.form["qty"],
-                    },
-                )
-                log.debug(f"Inserted into contains.")
+                for product, quantity in zip(selected_products, quantities):
+                    cur.execute(
+                        """
+                        INSERT INTO contains (order_no, SKU, qty)
+                        VALUES (%(order_no)s, %(SKU)s, %(qty)s);
+                        """,
+                        {
+                            "order_no": order_no_count + 1,
+                            "SKU": product,
+                            "qty": quantity,
+                        },
+                    )
+                    log.debug(f"Inserted into contains.")
+
     
                 cur.execute(
                     """
@@ -344,7 +366,7 @@ def create_order():
                     """,
                     {},
                     )
-    
+    order_no_count+=1;
     return redirect(url_for("order_customer_page"))
 
 

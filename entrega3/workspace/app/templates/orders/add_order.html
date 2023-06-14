@@ -121,10 +121,6 @@
         <div class="box-title">Regist order</div>
         <div class="container">
             <form action="{{url_for('create_order')}}" method="POST">
-                <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">Order no</span>
-                    <input name="order_no" type="text" class="form-control" aria-describedby="basic-addon1" required>
-                </div>
 
                 <input type="hidden" name="cust_no" value="{{ customer.cust_no }}">
 
@@ -132,23 +128,22 @@
                   <span class="input-group-text" id="basic-addon1">Order Date</span>
                   <input name="date" type="text" class="form-control" aria-describedby="basic-addon1" required>
                 </div>
-               
 
-                <div>
-                    <label for="sku">Select a product:</label>
-                    <select id="sku" name="sku">
-                        <option value="">-- Select a product --</option>
-                        {% for product in products %}
-                        <option value="{{product.sku}}">{{ product.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
+              
                 <div class="input-group mb-3">
-                  <span class="input-group-text">Qty</span>
-                  <input name="qty" type="number">
+                  <span class="input-group-text">Select products:</span>
+                  {% for product in products %}
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="product{{ product.sku }}" name="selected_products[]" value="{{ product.sku }}">
+                      <label class="form-check-label" for="product{{ product.sku }}">
+                        {{ product.name }}
+                      </label>
+                      <input class="form-control" type="number" name="quantities[]" placeholder="Qty">
+                    </div>
+                  {% endfor %}
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+
+              <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
     </div>
