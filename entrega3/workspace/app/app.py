@@ -457,7 +457,7 @@ def delete_product(sku):
                 """,
                 {"SKU": sku},
             )
-            log.debug(f"Deleted from orders.")
+            log.debug(f"Deleted from supplier.")
 
 
             cur.execute(
@@ -482,8 +482,6 @@ def delete_product(sku):
 
 @app.route("/supplier.html", methods=("GET",))
 def suppliers():
-
-    
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
             suppliers = cur.execute(
@@ -499,6 +497,42 @@ def suppliers():
 
 
     return render_template("supplier/index.html", suppliers=suppliers)
+
+@app.route("/supplier/new", methods=("GET", "POST"))
+def create_supplier():
+    if request.method == "GET":
+        with pool.connection() as conn:
+            with conn.cursor(row_factory=namedtuple_row) as cur:
+                    products = cur.execute(
+                        """
+                        SELECT name, SKU from product;
+                        """,
+                        {},
+                    ).fetchall()
+                    log.debug(f"Found {cur.rowcount} rows.")
+        
+        return render_template("supplier/create_supplier.html", products=products)
+    
+    else:
+        with pool.connection() as conn:
+            with conn.cursor(row_factory=namedtuple_row) as cur:
+                cur.execute(
+                    """
+                    INSERT INTO supplier (name, tin, address, date, SKU)
+                    VALUES (%(name)s, %(tin)s, %(address)s, %(date)s, %(sku)s);
+                    """,
+                    {
+                        "name": request.form["name"],
+                        "tin": request.form["tin"],
+                        "address": request.form["address"],
+                        "date": request.form["date"],
+                        "sku": request.form["sku"],
+                    },
+                )
+                log.debug(f"Inserted into supplier.")
+        
+        return redirect(url_for("suppliers"))
+                
 
 @app.route("/supplier/<tin>/delete", methods=("POST",))
 def supplier_delete(tin):
@@ -660,12 +694,14 @@ def employees_page():
 def customer_index():
     """Show all the accounts, most recent first."""
 
+    global cust_no_count
+
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
         
             count = cur.execute(
                     """
-                    SELECT COUNT(*)
+                    SELECT COUNT(*) as count
                     FROM customer;
                     """,
                     ).fetchone()
@@ -679,6 +715,9 @@ def customer_index():
                 {},
             ).fetchall()
             log.debug(f"Found {cur.rowcount} rows.")
+
+    if cust_no_count < count[0]:
+        cust_no_count = count[0]
     
     # API-like response is returned to clients that request JSON explicitly (e.g., fetch)
     if (
@@ -689,7 +728,7 @@ def customer_index():
 
     return render_template("customer/customer_index.html", customers=customers)
 
-cust_no_count = 10;
+cust_no_count = 0;
 @app.route("/customer/add", methods=("GET", "POST"))
 def add_customer():
     global cust_no_count
@@ -712,7 +751,7 @@ def add_customer():
                     VALUES (%(cust_no)s, %(name)s, %(email)s, %(phone)s, %(address)s);
                     """,
                     {
-                        "cust_no": (cust_no_count),
+                        "cust_no": cust_no_count + 1,
                         "name": request.form["name"],
                         "email": request.form["email"],
                         "phone": request.form["phone"],

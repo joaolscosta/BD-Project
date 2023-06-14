@@ -112,18 +112,18 @@ insert into customer (cust_no, name, email, phone, address) VALUES (2,'Nunes', '
 insert into customer (cust_no, name, email, phone, address) VALUES (3,'Costa', 'joaolscosta@gmail.com', '947854684', 'Rua das Flores, 1000-001 Lisboa');
 
 /* será que tem de ter o order_no????????*/
-insert into orders (order_no, date, cust_no) VALUES (4,'2017-01-01', (select cust_no from customer where name = 'Belchior'));
-insert into orders (order_no, date, cust_no) VALUES (5,'2018-01-01', (select cust_no from customer where name = 'Nunes'));
-insert into orders (order_no, date, cust_no) VALUES (6,'2019-01-01', (select cust_no from customer where name = 'Costa'));
-insert into orders (order_no, date, cust_no) VALUES (7,'2014-01-01', (select cust_no from customer where name = 'Costa'));
-insert into orders (order_no, date, cust_no) VALUES (8,'2023-01-02', (select cust_no from customer where name = 'Costa'));
-insert into orders (order_no, date, cust_no) VALUES (9,'2023-02-02', (select cust_no from customer where name = 'Nunes'));
-insert into orders (order_no, date, cust_no) VALUES (10,'2023-01-03', (select cust_no from customer where name = 'Nunes'));
-insert into orders (order_no, date, cust_no) VALUES (11,'2022-01-03', (select cust_no from customer where name = 'Nunes'));
-insert into orders (order_no, date, cust_no) VALUES (12,'2022-01-04', (select cust_no from customer where name = 'Nunes'));
-insert into orders (order_no, date, cust_no) VALUES (13,'2022-01-04', (select cust_no from customer where name = 'Nunes'));
-insert into orders (order_no, date, cust_no) VALUES (14,'2022-03-04', (select cust_no from customer where name = 'Nunes'));
-insert into orders (order_no, date, cust_no) VALUES (15,'2022-10-04', (select cust_no from customer where name = 'Nunes'));
+insert into orders (order_no, date, cust_no) VALUES (1,'2017-01-01', (select cust_no from customer where name = 'Belchior'));
+insert into orders (order_no, date, cust_no) VALUES (2,'2018-01-01', (select cust_no from customer where name = 'Nunes'));
+insert into orders (order_no, date, cust_no) VALUES (3,'2019-01-01', (select cust_no from customer where name = 'Costa'));
+insert into orders (order_no, date, cust_no) VALUES (4,'2014-01-01', (select cust_no from customer where name = 'Costa'));
+insert into orders (order_no, date, cust_no) VALUES (5,'2023-01-02', (select cust_no from customer where name = 'Costa'));
+insert into orders (order_no, date, cust_no) VALUES (6,'2023-02-02', (select cust_no from customer where name = 'Nunes'));
+insert into orders (order_no, date, cust_no) VALUES (7,'2023-01-03', (select cust_no from customer where name = 'Nunes'));
+insert into orders (order_no, date, cust_no) VALUES (8,'2022-01-03', (select cust_no from customer where name = 'Nunes'));
+insert into orders (order_no, date, cust_no) VALUES (9,'2022-01-04', (select cust_no from customer where name = 'Nunes'));
+insert into orders (order_no, date, cust_no) VALUES (10,'2022-01-04', (select cust_no from customer where name = 'Nunes'));
+insert into orders (order_no, date, cust_no) VALUES (11,'2022-03-04', (select cust_no from customer where name = 'Nunes'));
+insert into orders (order_no, date, cust_no) VALUES (12,'2022-10-04', (select cust_no from customer where name = 'Nunes'));
 
 
 /*
@@ -133,8 +133,8 @@ insert into sale (order_no) VALUES ((select order_no from "order" where date = '
 
 insert into pay (order_no, cust_no) VALUES ((select order_no from orders where date = '2017-01-01'), (select cust_no from customer where name = 'Belchior'));
 insert into pay (order_no, cust_no) VALUES ((select order_no from orders where date = '2018-01-01'), (select cust_no from customer where name = 'Nunes'));
-insert into pay (order_no, cust_no) VALUES (11, 2);
-insert into pay (order_no, cust_no) VALUES (12, 2);
+insert into pay (order_no, cust_no) VALUES (8, 2);
+insert into pay (order_no, cust_no) VALUES (9, 2);
 
 insert into employee (ssn, TIN, bdate, name) VALUES ('546654654', '123123123', '2002-04-10', 'Pedrinho');
 insert into employee (ssn, TIN, bdate, name) VALUES ('546654655', '123123124', '2002-02-14', 'Gui');
@@ -189,13 +189,13 @@ insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where
 insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), (select order_no from orders where date = '2019-01-01'), 3);
 insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), (select order_no from orders where date = '2023-01-02'), 14);
 insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), (select order_no from orders where date = '2023-01-03'), 3);
-insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 11, 14);
-insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 12, 20);
-insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 13, 2);
-insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 14, 2);
-insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 15, 2);
-insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 7, 14);
-insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 9, 14);
+insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 8, 14);
+insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 9, 20);
+insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 10, 2);
+insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 11, 2);
+insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 12, 2);
+insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 4, 14);
+insert into contains (SKU, order_no, qty) VALUES ((select SKU from product where name = 'TV'), 6, 14);
 
 
 insert into supplier (TIN, name, address, SKU, date) VALUES ('123456789', 'Goncalo', 'Rua das Palmeiras, 7000-007 Évora', (select SKU from product where name = 'Gaming Chair'), '2017-01-01');
