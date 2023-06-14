@@ -78,8 +78,8 @@ def order_customer_page():
             log.debug(f"Found {cur.rowcount} rows.")
 
 
-    if order_no_count < count[0]:
-        order_no_count = count[0]
+    if order_no_count < count[-1]:
+        order_no_count = count[-1]
 
     # API-like response is returned to clients that request JSON explicitly (e.g., fetch)
     if (
@@ -108,6 +108,23 @@ def orders_index(cust_no):
             total_pages_order = math.ceil(count_order[0] / per_page_order)
             offset_order= (page_order - 1) * per_page_order
             
+            orders = cur.execute(
+                """
+                SELECT DISTINCT order_no
+                FROM orders JOIN contains USING (order_no)
+                WHERE cust_no = %(cust_no)s
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM pay
+                    WHERE pay.order_no = orders.order_no
+                )
+                ORDER BY order_no
+                LIMIT {0} OFFSET {1};
+                """.format(per_page_order, offset_order),
+                {"cust_no": cust_no},
+            ).fetchall()
+            log.debug(f"Found {cur.rowcount} rows.")
+
             contains = cur.execute(
                 """
                 SELECT order_no, sku, qty
@@ -151,23 +168,25 @@ def orders_index(cust_no):
         request.accept_mimetypes["application/json"]
         and not request.accept_mimetypes["text/html"]
     ):
-        return jsonify(contains)
-    return render_template("orders/orders_index.html", contains=contains, pay=pay, customer=customer,current_page=page_order, total_pages=total_pages_order)
+        return jsonify(orders)
+    return render_template("orders/orders_index.html", increment_counter=increment_counter,orders=orders, pay=pay, customer=customer,contains=contains,current_page=page_order, total_pages=total_pages_order)
 
 
-@app.route("/orders/<order_no>/<sku>/", methods=("GET",))
-def order_detail(order_no, sku):
+@app.route("/orders/<order_no>/", methods=("GET",))
+def order_detail(order_no):
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
-            contain = cur.execute(
+            contains = cur.execute(
                 """
                 SELECT *
                 FROM contains
                 WHERE order_no = %(order_no)s;
                 """,
                 {"order_no": order_no},
-            ).fetchone()
+            ).fetchall()
             log.debug(f"Found {cur.rowcount} rows.")
+
+            qty_list = [contain[2] for contain in contains]
 
             order = cur.execute(
                 """
@@ -180,17 +199,18 @@ def order_detail(order_no, sku):
 
             log.debug(f"Found {cur.rowcount} rows.")
 
-            product = cur.execute(
+            products = cur.execute(
                 """
                 SELECT *
-                FROM product
-                WHERE SKU = %(SKU)s;
+                FROM product JOIN contains USING (sku)
+                WHERE order_no = %(order_no)s
                 """,
-                {"SKU": sku},
-            ).fetchone()
+                {"order_no": order_no},
+            ).fetchall()
             log.debug(f"Found {cur.rowcount} rows.")
+
     
-    return render_template("orders/order_payment.html", contain=contain, order=order, product=product)
+    return render_template("orders/order_payment.html", qty_list=qty_list, order=order, products=products)
 
 @app.route("/orders/add/<cust_no>", methods=("GET", "POST"))
 def add_order(cust_no):
@@ -874,6 +894,16 @@ def customer_delete(cust_no):
                 )
 
     return redirect(url_for("customer_index"))
+
+
+
+def increment_counter(order, contains):
+    counter = 0
+    for product in contains:
+        if order[0] == product[0]:
+            counter += 1
+    return counter
+
 
 
 @app.route("/ping", methods=("GET",))

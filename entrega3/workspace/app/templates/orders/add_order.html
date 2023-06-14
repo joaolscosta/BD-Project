@@ -138,10 +138,15 @@
                       <label class="form-check-label" for="product{{ product.sku }}">
                         {{ product.name }}
                       </label>
-                      <input class="form-control" type="number" name="quantities[]" placeholder="Qty">
+                      {% if product.sku in selected_products %}
+                        <input class="form-control" type="number" name="quantities[]" placeholder="Qty">
+                      {% else %}
+                        <input class="form-control" type="number" name="quantities[]" value="0" placeholder="Qty">
+                      {% endif %}
                     </div>
                   {% endfor %}
                 </div>
+                
 
               <button type="submit" class="btn btn-primary">Submit</button>
             </form>

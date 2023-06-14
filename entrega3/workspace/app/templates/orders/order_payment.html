@@ -105,12 +105,18 @@
 <div class="bodyyy">
   <div class="payment-container">
     <div class="f-number">
-      <h1 class="o-number">Payment for order number: {{contain['order_no']}}</h1>
+      <h1 class="o-number">Payment for order number: {{order['order_no']}}</h1>
     </div>
-    <p class="o-number">{{ product['name'] }}</p>
-    <p class="o-sku">Product SKU: {{ product['sku'] }}</p>
-    <p class="o-qty">Product quantity: {{ contain['qty'] }}</p>
-    <p class="o-qty">€ Product price:  {{ product['price'] }}</p>
+    
+    {% for product in products %}
+      <div>
+          <p class="o-number">{{ product['name'] }}</p>
+          <p class="o-sku">Product SKU: {{ product['sku'] }}</p>
+          <p class="o-qty">Product quantity: {{ qty_list[loop.index0] }}</p>
+          <p class="o-qty">€ Product price:  {{ product['price'] }}</p>
+      </div>
+    {% endfor %}
+    
 
     <div class="payment-form" method="post">
       <div class="form-group">

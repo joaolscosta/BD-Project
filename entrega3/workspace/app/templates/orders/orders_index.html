@@ -115,25 +115,22 @@
   <hr class="headeruwu" />
   <div class="orders-list">
     <div class="left-column">
-      {% for order in contains %}
-      <div class="order">
-        <div class="f-number">
-          <p class="o-number o-font">Order number: {{ order['order_no'] }}</p>
-        </div>
-        <div class="f-sku">
-          <p class="o-sku o-font">Product SKU: {{ order['sku'] }}</p>
-        </div>
-        <div class="f-footer">
-          <p class="o-qty o-font">Product quantity: {{ order['qty'] }}</p>
-          <a
-            class="btn btn-outline-success"
-            href="{{url_for('order_detail', order_no=order['order_no'], sku=order['sku'])}}"
-            >Pay</a
-          >
-        </div>
-      </div>
 
+    
+      {% for order in orders %}
+        <div class="order">
+          <div class="f-number">
+            <p class="o-number o-font">Order number: {{ order['order_no'] }}</p>
+          </div>
+          {% set counter = increment_counter(order, contains) %}
+          <div class="f-footer">
+            <p class="o-qty o-font">Number of products: {{ counter }}</p>
+            <a class="btn btn-outline-success" href="{{ url_for('order_detail', order_no=order['order_no'])}}">Pay</a>
+          </div>
+        </div>
       {% endfor %}
+
+
     </div>
 
     <div class="right-column">
@@ -164,4 +161,6 @@
     {% endif %}
   </div>
 </div>
+
 {% endblock %}
+
