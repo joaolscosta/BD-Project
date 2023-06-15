@@ -49,6 +49,35 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/login", methods=("GET", "POST"))
+def login():
+    
+    if request.method == "POST":
+        name = request.form.get("name")
+        cust_no = request.form.get("cust_no")
+        
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                # Check if the username exists in the Customer table
+                cur.execute(
+                    """
+                    SELECT COUNT(*) FROM customer WHERE name = %s AND cust_no = %s;
+                    """,
+                    (name, cust_no),
+                )
+                count = cur.fetchone()[0]
+                if count == 1:
+                    
+                    # Perform the login, as the username exists
+                    # You can set some session variables or perform other actions to authenticate the user
+                    return redirect(url_for("orders_index_private", cust_no=cust_no))
+        
+        # If the username is not found, you can display an error message
+        error_message = "Invalid name or cust_no"
+        return render_template("index.html", error_message=error_message)
+    
+    # Render the login page template for the initial GET request
+    return render_template("index.html")
 
 
 
@@ -170,6 +199,85 @@ def orders_index(cust_no):
     ):
         return jsonify(orders)
     return render_template("orders/orders_index.html", increment_counter=increment_counter,orders=orders, pay=pay, customer=customer,contains=contains,current_page=page_order, total_pages=total_pages_order)
+
+@app.route("/orders/<cust_no>/private", methods=("GET",))
+def orders_index_private(cust_no):
+    page_order = request.args.get("page", 1, type=int)
+    per_page_order = 9
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            count_order = cur.execute(
+                """
+                SELECT COUNT(*) as count
+                FROM orders;
+                """
+            ).fetchone()
+            
+            total_pages_order = math.ceil(count_order[0] / per_page_order)
+            offset_order= (page_order - 1) * per_page_order
+            
+            orders = cur.execute(
+                """
+                SELECT DISTINCT order_no
+                FROM orders JOIN contains USING (order_no)
+                WHERE cust_no = %(cust_no)s
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM pay
+                    WHERE pay.order_no = orders.order_no
+                )
+                ORDER BY order_no
+                LIMIT {0} OFFSET {1};
+                """.format(per_page_order, offset_order),
+                {"cust_no": cust_no},
+            ).fetchall()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+            contains = cur.execute(
+                """
+                SELECT order_no, sku, qty
+                FROM orders JOIN contains USING (order_no)
+                WHERE cust_no = %(cust_no)s
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM pay
+                    WHERE pay.order_no = orders.order_no
+                )
+                ORDER BY order_no
+                LIMIT {0} OFFSET {1};
+                """.format(per_page_order, offset_order),
+                {"cust_no": cust_no},
+            ).fetchall()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+            pay = cur.execute(
+                """
+                SELECT order_no, cust_no
+                FROM pay
+                WHERE cust_no = %(cust_no)s;
+                """,
+                {"cust_no": cust_no},
+            ).fetchall()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+            customer = cur.execute(
+                """
+                SELECT *
+                FROM customer
+                WHERE cust_no = %(cust_no)s;
+                """,
+                {"cust_no": cust_no},
+            ).fetchone()
+
+            log.debug("Found 1 row.")
+
+    # API-like response is returned to clients that request JSON explicitly (e.g., fetch)
+    if (
+        request.accept_mimetypes["application/json"]
+        and not request.accept_mimetypes["text/html"]
+    ):
+        return jsonify(orders)
+    return render_template("orders/orders_index_private.html", increment_counter=increment_counter,orders=orders, pay=pay, customer=customer,contains=contains,current_page=page_order, total_pages=total_pages_order)
 
 
 @app.route("/orders/<order_no>/", methods=("GET",))
@@ -671,7 +779,7 @@ def pay_order():
                 {},
                 )
 
-    return redirect(url_for("order_customer_page", cust_no=cust_no))
+    return redirect(url_for("orders_index_private", cust_no=cust_no))
 
 # @app.route("/accounts/<account_number>/update", methods=("GET", "POST"))
 # def account_update(account_number):

@@ -1,4 +1,4 @@
-{% extends 'base/page.html' %} {% block header %}
+{% extends 'base/customer_page.html' %} {% block header %}
 <h1>{% block title %}Orders{% endblock %}</h1>
 {% endblock %} {% block content %}
 <style>
@@ -105,6 +105,11 @@
   <div class="title-bar">
     {% if customer %} {% if customer.cust_no %}
     <h1 class="o-font-title">{{customer.name}}'s Orders</h1>
+    <a
+      class="btn btn-primary"
+      href="{{ url_for('add_order', cust_no=customer.cust_no) }}"
+      >Add Orders</a
+    >
     {% endif %} {% endif %}
   </div>
   <hr class="headeruwu" />
@@ -120,6 +125,7 @@
           {% set counter = increment_counter(order, contains) %}
           <div class="f-footer">
             <p class="o-qty o-font">Number of products: {{ counter }}</p>
+            <a class="btn btn-outline-success" href="{{ url_for('order_detail', order_no=order['order_no'])}}">Pay</a>
           </div>
         </div>
       {% endfor %}
