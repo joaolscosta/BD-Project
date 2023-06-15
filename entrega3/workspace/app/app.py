@@ -202,10 +202,13 @@ def orders_index(cust_no):
 
 @app.route("/orders/<cust_no>/private", methods=("GET",))
 def orders_index_private(cust_no):
+
+
     page_order = request.args.get("page", 1, type=int)
     per_page_order = 9
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
+            
             count_order = cur.execute(
                 """
                 SELECT COUNT(*) as count
@@ -270,6 +273,9 @@ def orders_index_private(cust_no):
             ).fetchone()
 
             log.debug("Found 1 row.")
+
+
+
 
     # API-like response is returned to clients that request JSON explicitly (e.g., fetch)
     if (
@@ -473,6 +479,8 @@ def create_order():
     if request.method == "GET":
         return render_template("orders/create_order.html")
     
+
+    
     selected_products = request.form.getlist('selected_products[]')
     quantities = request.form.getlist('quantities[]')
 
@@ -485,6 +493,15 @@ def create_order():
                     {},
                     )
                 
+                count_order = cur.execute(
+                    """
+                    SELECT COUNT(*) as count
+                    FROM orders;
+                    """
+                ).fetchone()
+
+                if order_no_count < count_order[-1]:
+                    order_no_count = count_order[-1]
 
                 cur.execute(
                     
@@ -522,7 +539,7 @@ def create_order():
                     {},
                     )
     order_no_count+=1;
-    return redirect(url_for("order_customer_page"))
+    return redirect(url_for("orders_index_private", cust_no=request.form["cust_no"]))
 
 
 @app.route("/products/<sku>/update", methods=("GET", "POST"))
