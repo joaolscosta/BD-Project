@@ -1,6 +1,6 @@
 {% extends 'base/page.html' %} {% block header %}
 <h1>{% block title %}Suppliers{% endblock %}</h1>
-{% endblock %} {% block content %} 
+{% endblock %} {% block content %}
 <style>
   .bodyyy {
     width: 89%;
@@ -51,9 +51,11 @@
 <div class="bodyyy">
   <div class="title-bar">
     <h1>suppliers</h1>
-    <a class="btn btn-outline-primary" href="{{url_for('create_supplier')}}">Add Supplier</a>
+    <a class="btn btn-outline-primary" href="{{url_for('create_supplier')}}"
+      >Add Supplier</a
+    >
   </div>
-  <hr class="headeruwu">
+  <hr class="headeruwu" />
   <ol class="list-group list-group-numbered">
     {% for supplier in suppliers %}
     <li class="list-group-item d-flex justify-content-around align-items-start">
@@ -62,17 +64,40 @@
         {{ supplier['address'] }}
       </div>
       <div class="lat-long">
-        <span class="badge bg-primary rounded-pill">{{supplier['product_name']}}</span>
+        <span class="badge bg-primary rounded-pill"
+          >{{supplier['product_name']}}</span
+        >
         <span class="badge bg-primary rounded-pill">{{supplier['date']}}</span>
       </div>
       <div class="del-btn">
         <!-- ESTA PORRA DEIXOU DE FUNCIONAR PORQUE MUDEI PARA FORMS-->
-        <form action="{{ url_for('supplier_delete', tin=supplier['tin']) }}" method="post">
-          <input class="btn btn-danger remove-btn" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+        <form
+          action="{{ url_for('supplier_delete', tin=supplier['tin']) }}"
+          method="post"
+        >
+          <input
+            class="btn btn-danger remove-btn"
+            type="submit"
+            value="Delete"
+            onclick="return confirm('Are you sure?');"
+          />
         </form>
       </div>
     </li>
     {% endfor %}
   </ol>
+  <div class="pagination">
+    {% if current_page > 1 %}
+    <a href="?page={{ current_page - 1 }}" class="btn btn-primary">Previous</a>
+    {% endif %} {% for page_num in range(1, total_pages + 1) %}
+    <a
+      href="?page={{ page_num }}"
+      class="btn btn-primary{% if page_num == current_page %} active{% endif %}"
+      >{{ page_num }}</a
+    >
+    {% endfor %} {% if current_page < total_pages %}
+    <a href="?page={{ current_page + 1 }}" class="btn btn-primary">Next</a>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}

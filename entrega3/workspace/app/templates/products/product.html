@@ -1,6 +1,6 @@
 {% extends 'base/page.html' %} {% block header %}
 <h1>{% block title %}Product{% endblock %}</h1>
-{% endblock %} {% block content %} 
+{% endblock %} {% block content %}
 <style>
   .bodyyy {
     width: 87%;
@@ -36,7 +36,7 @@
 
   .product-display img {
     width: 450px;
-    height: 450px;
+    height: 350px;
   }
 
   .product-info {
@@ -85,21 +85,29 @@
     align-items: center;
     gap: 10px;
   }
-
+  img {
+  }
 </style>
 <div class="bodyyy">
   <div class="title-bar">
     <h1>{{product['name']}}</h1>
     <div class="btns">
-      <a class="btn btn-primary" href="{{url_for('update_product', sku=product['sku'])}}">Edit Product</a>
-      <form action="{{url_for('delete_product', sku=product['sku'])}}" method="POST">
+      <a
+        class="btn btn-primary"
+        href="{{url_for('update_product', sku=product['sku'])}}"
+        >Edit Product</a
+      >
+      <form
+        action="{{url_for('delete_product', sku=product['sku'])}}"
+        method="POST"
+      >
         <button type="submit" class="btn btn-danger">Delete</button>
       </form>
     </div>
   </div>
-  <hr class="headeruwu">
+  <hr class="headeruwu" />
   <div class="product-display">
-    <img src="https://www.continente.pt/dw/image/v2/BDVS_PRD/on/demandware.static/-/Sites-col-master-catalog/default/dwca0ac39d/images/col/688/6881817-frente-com-fatia.jpg?sw=2000&sh=2000" alt="product_image">
+    <img src="https://goldstore60.com/img/no-image.png" alt="product_image" />
     <div class="product-info">
       <h2 class="p-name">{{product['name']}}</h2>
       <p class="p-desc">{{product['description']}}</p>
@@ -109,4 +117,4 @@
     </div>
   </div>
 </div>
-  {% endblock %}
+{% endblock %}
