@@ -3,7 +3,10 @@ html {
   background: #FDFDFD;
   padding: 0;
 }
-
+.mt-3 {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
 body {
   max-width: 100%;
   margin: 0;
@@ -73,7 +76,9 @@ header .action {
   display: block;
   padding: 0.5rem;
 }
-
+.pagination {
+  margin: 20px 30px 20px 30px;
+}
 .content {
   padding: 0 1rem 1rem;
 }
