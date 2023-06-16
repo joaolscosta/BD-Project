@@ -13,6 +13,8 @@ from flask import url_for
 from psycopg.rows import namedtuple_row
 from psycopg_pool import ConnectionPool
 
+import re
+
 
 # postgres://{user}:{password}@{hostname}:{port}/{database-name}
 DATABASE_URL = os.environ.get("DATABASE_URL", "postgres://db:db@postgres/db")
@@ -426,7 +428,28 @@ def product_detail(sku):
 @app.route("/products/create", methods=("GET", "POST"))
 def create_product():
     if request.method == "GET":
-        return render_template("products/create_product.html")
+        return render_template("products/create_product.html", error=False)
+
+    sku= request.form["sku"]
+    name= request.form["name"]
+    price= request.form["price"]
+    description= request.form["description"]
+    ean= request.form["ean"]
+
+    if re.search("^(([a-zA-Z])|([0-9])){25}$", sku) is None:
+        return render_template("products/create_product.html", error="SKU must be 25 alphanumeric characters.")
+
+    elif len(name) > 200:
+        return render_template("products/create_product.html", error="Name must be less than 200 characters.")
+
+    elif re.search("^([0-9]){1,8}[.][0-9]{2}$", price) is None:
+        return render_template("products/create_product.html", error="Price must be a decimal number with 2 decimal places. It must have 10 digits at most.")
+    
+    elif len(description) > 200:
+        return render_template("products/create_product.html", error="Description must be less than 200 characters.")
+    
+    elif re.search("^(([0-9]){1,13}$", ean) is None:
+        return render_template("products/create_product.html", error="EAN must be 13 digits.")
 
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
@@ -443,11 +466,11 @@ def create_product():
                     VALUES (%(SKU)s, %(name)s, %(price)s, %(description)s, %(ean)s);
                     """,
                     {
-                        "SKU": request.form["sku"],
-                        "name": request.form["name"],
-                        "price": request.form["price"],
-                        "description": request.form["description"],
-                        "ean": request.form["ean"],
+                        "SKU": sku,
+                        "name": name,
+                        "price": price,
+                        "description": description,
+                        "ean": ean,
                     },
                 )
                 log.debug(f"Inserted into product.")
@@ -472,6 +495,9 @@ def create_order():
     
     selected_products = request.form.getlist('selected_products[]')
     quantities = request.form.getlist('quantities[]')
+
+    if re.search("^\d{4}-\d{2}-\d{2}$", request.form['date']) is None:
+        return render_template("orders/create_order.html", error="Date must be in the format YYYY-MM-DD.")
 
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
@@ -677,9 +703,30 @@ def create_supplier():
                     ).fetchall()
                     log.debug(f"Found {cur.rowcount} rows.")
         
-        return render_template("supplier/create_supplier.html", products=products)
+        return render_template("supplier/create_supplier.html", products=products, error=False)
     
     else:
+
+        name = request.form["name"]
+        tin = request.form["tin"]
+        address = request.form["address"]
+        date = request.form["date"]
+        sku = request.form["sku"]
+
+        if len(tin) > 20:
+            return render_template("supplier/create_supplier.html", error="TIN must be less than 20 characters.")
+        
+        if len(name) > 200:
+            return render_template("supplier/create_supplier.html", error="Name must be less than 200 characters.")
+
+        if len(address) > 255:
+            return render_template("supplier/create_supplier.html", error="Address must be less than 255 characters.")
+        
+        if re.search("^\d{4}-\d{2}-\d{2}$", date) is None:
+            return render_template("supplier/create_supplier.html", error="Date must be in YYYY-MM-DD format.")
+        
+
+
         with pool.connection() as conn:
             with conn.cursor(row_factory=namedtuple_row) as cur:
                 cur.execute(
@@ -688,11 +735,11 @@ def create_supplier():
                     VALUES (%(name)s, %(tin)s, %(address)s, %(date)s, %(sku)s);
                     """,
                     {
-                        "name": request.form["name"],
-                        "tin": request.form["tin"],
-                        "address": request.form["address"],
-                        "date": request.form["date"],
-                        "sku": request.form["sku"],
+                        "name": name,
+                        "tin": tin,
+                        "address": address,
+                        "date": date,
+                        "sku": sku,
                     },
                 )
                 log.debug(f"Inserted into supplier.")
@@ -769,67 +816,6 @@ def pay_order():
                 )
 
     return redirect(url_for("orders_index_private", cust_no=cust_no))
-
-# @app.route("/accounts/<account_number>/update", methods=("GET", "POST"))
-# def account_update(account_number):
-#     """Update the account balance."""
-
-#     with pool.connection() as conn:
-#         with conn.cursor(row_factory=namedtuple_row) as cur:
-#             account = cur.execute(
-#                 """
-#                 SELECT account_number, branch_name, balance
-#                 FROM account
-#                 WHERE account_number = %(account_number)s;
-#                 """,
-#                 {"account_number": account_number},
-#             ).fetchone()
-#             log.debug(f"Found {cur.rowcount} rows.")
-
-#     if request.method == "POST":
-#         balance = request.form["balance"]
-
-#         error = None
-
-#         if not balance:
-#             error = "Balance is required."
-#             if not balance.isnumeric():
-#                 error = "Balance is required to be numeric."
-
-#         if error is not None:
-#             flash(error)
-#         else:
-#             with pool.connection() as conn:
-#                 with conn.cursor(row_factory=namedtuple_row) as cur:
-#                     cur.execute(
-#                         """
-#                         UPDATE account
-#                         SET balance = %(balance)s
-#                         WHERE account_number = %(account_number)s;
-#                         """,
-#                         {"account_number": account_number, "balance": balance},
-#                     )
-#                 conn.commit()
-#             return redirect(url_for("account_index"))
-
-#     return render_template("account/update.html", account=account)
-
-
-# @app.route("/accounts/<account_number>/delete", methods=("POST",))
-# def account_delete(account_number):
-#     """Delete the account."""
-
-#     with pool.connection() as conn:
-#         with conn.cursor(row_factory=namedtuple_row) as cur:
-#             cur.execute(
-#                 """
-#                 DELETE FROM account
-#                 WHERE account_number = %(account_number)s;
-#                 """,
-#                 {"account_number": account_number},
-#             )
-#         conn.commit()
-#     return redirect(url_for("account_index"))
 
 app.route("/employee_index.html", methods=("GET",))
 def employees_page():
@@ -911,7 +897,24 @@ cust_no_count = 0;
 def add_customer():
     global cust_no_count
     if request.method == "GET":
-        return render_template("customer/add_customer.html")
+        return render_template("customer/add_customer.html", error=False)
+
+    name = request.form["name"]
+    email = request.form["email"]
+    phone = request.form["phone"]
+    address = request.form["address"]
+
+    if len(name) > 80:
+        return render_template("customer/add_customer.html", error="Name is too long.")
+    
+    if len(email) > 254:
+        return render_template("customer/add_customer.html", error="Email is too long.")
+
+    if len(phone) > 15:
+        return render_template("customer/add_customer.html", error="Phone is too long.")
+
+    if len(address) > 255:
+        return render_template("customer/add_customer.html", error="Address is too long.")
     
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:

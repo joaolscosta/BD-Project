@@ -65,12 +65,23 @@
     cursor: pointer;
     transition: 0.4s;
   }
+
+  .margins-basic {
+    margin-top: 10px;
+    margin-left: 30px;
+    margin-right: 30px;
+  }
 </style>
 
 <div class="title-bar">
   <h1 class="o-font-title">Regist New Customer</h1>
 </div>
 <hr class="hz-line" />
+{% if error %}
+<div class="alert alert-danger margins-basic" role="alert">
+  {{error}}
+</div>
+{% endif %}
 <div class="form-body">
   <form method="POST">
     <div class="box">
@@ -80,7 +91,7 @@
         <input type="text" placeholder="Enter Name" name="name" required />
         <p></p>
         <label for="name"><b>Email</b></label>
-        <input type="text" placeholder="Enter Email" name="email" required />
+        <input type="email" placeholder="Enter Email" name="email" required />
         <p></p>
         <label for="name"><b>Phone</b></label>
         <input

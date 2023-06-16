@@ -6,11 +6,23 @@
   .form-body {
     margin: 20px 30px 0px 30px;
   }
+
+  .margins-basic {
+    margin-top: 10px;
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+
 </style>
 <div class="title-bar">
   <h1 class="o-font-title">Create Product</h1>
 </div>
 <hr class="hz-line" />
+{% if error %}
+<div class="alert alert-danger margins-basic" role="alert">
+  {{error}}
+</div>
+{% endif %}
 <div class="form-body">
   <form action="{{url_for('create_product')}}" method="POST">
     <div class="input-group mb-3">
