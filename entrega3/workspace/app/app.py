@@ -375,7 +375,8 @@ def products_page():
             count = cur.execute(
                 """
                 SELECT COUNT(*) as count
-                FROM product;
+                FROM product
+                WHERE NOT SKU = '-1';
                 """
             ).fetchone()    
             
@@ -386,6 +387,7 @@ def products_page():
                 """
                 SELECT SKU, name, price, description
                 FROM product
+                WHERE NOT SKU = '-1'
                 ORDER BY SKU DESC
                 LIMIT {0} OFFSET {1};
                 """.format(per_page, offset),
