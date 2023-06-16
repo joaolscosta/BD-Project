@@ -70,14 +70,15 @@
     <a
       class="btn btn-primary"
       href="{{url_for('update_product', sku=product['sku'])}}"
-      >Edit Product</a
-    >
-    <form
-      action="{{url_for('delete_product', sku=product['sku'])}}"
-      method="POST"
-    >
-      <button type="submit" class="btn btn-danger">Delete</button>
-    </form>
+      >Edit Product</a>
+      <div class="del-btn-b">
+        <form
+          action="{{url_for('delete_product', sku=product['sku'])}}"
+          method="post"
+        >
+          <button onclick="return confirm('Are you sure?');">Delete</button>
+        </form>
+    </div>
   </div>
 </div>
 <hr class="hz-line" />

@@ -25,42 +25,6 @@
     width: 100%;
     gap: 15px;
   }
-
-  .fixed-wid {
-    width: 33%;
-  }
-
-  .del-btn {
-    background-color: #ff4d40;
-    border: none;
-    color: white;
-    padding: 7px;
-    padding-left: 12px;
-    padding-right: 12px;
-    text-align: center;
-    text-decoration: none;
-    display: flex;
-    font-size: 15px;
-    border-radius: 7px;
-    cursor: pointer;
-  }
-
-  .del-btn button {
-    color: white;
-  }
-
-  .del-btn:hover {
-    background: #ff1500;
-    transition: 0.4s;
-  }
-
-  .btn-placeholder {
-    display: flex;
-    flex-direction: row;
-    justify-content: right;
-    align-items: center;
-    margin: auto 0;
-  }
 </style>
 <div class="title-bar">
   <h1 class="o-font-title">Suppliers</h1>
@@ -75,7 +39,7 @@
     class="list-group-item d-flex justify-content-around align-items-start gap-15"
   >
     <div class="row-supplier">
-      <div class="ms-2 fixed-wid">
+      <div class="ms-2 fixed-wid-33">
         <div class="fw-bold">{{supplier['name']}}</div>
         {{ supplier['address'] }}
       </div>
@@ -85,8 +49,8 @@
         >
         <span class="badge bg-primary rounded-pill">{{supplier['date']}}</span>
       </div>
-      <div class="btn-placeholder fixed-wid">
-        <div class="del-btn">
+      <div class="btn-placeholder-b fixed-wid-33">
+        <div class="del-btn-b">
           <form
             action="{{url_for('supplier_delete', tin=supplier['tin'])}}"
             method="post"

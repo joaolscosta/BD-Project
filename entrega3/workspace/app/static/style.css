@@ -215,3 +215,39 @@ ion-icon {
   font-family: sans-serif;
   font-size: 2rem;
 }
+
+.fixed-wid-33 {
+  width: 33%;
+}
+
+.del-btn-b {
+  background-color: #ff4d40;
+  border: none;
+  color: white;
+  padding: 7px;
+  padding-left: 12px;
+  padding-right: 12px;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  font-size: 15px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.del-btn-b button {
+  color: white;
+}
+
+.del-btn-b:hover {
+  background: #ff1500;
+  transition: 0.4s;
+}
+
+.btn-placeholder-b {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  align-items: center;
+  margin: auto 0;
+}
