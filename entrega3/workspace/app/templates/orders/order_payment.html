@@ -123,6 +123,8 @@
       <div class="f-footer">
         <p class="o-qty">€ Total price: {{ result_sum }}</p>
       </div>
+      <input type="hidden" name="order_no" value="{{order['order_no']}}">
+      <input type="hidden" name="cust_no" value="{{ order['cust_no'] }}">
       <div>
         <input class="btn btn-outline-success" type="submit" id="pay-now-btn" value="Pay" onclick="return confirm('Are you sure?');">
       </div>

@@ -490,20 +490,39 @@ def create_product():
     return redirect(url_for("products_page"))
 
 order_no_count = 0;
-@app.route("/orders/create", methods=("GET", "POST"))
-def create_order():
+@app.route("/orders/create/<cust_no>", methods=("POST",))
+def create_order(cust_no):
     global order_no_count
-    if request.method == "GET":
-        return render_template("orders/add_order.html", error=False)
-    
-
     
     selected_products = request.form.getlist('selected_products[]')
     quantities = request.form.getlist('quantities[]')
 
     for quantity in quantities:
         if int(quantity) < 0:
-            return render_template("orders/add_order.html", error="Quantity must not be negative.")
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=namedtuple_row) as cur:
+                    customer = cur.execute(
+                        """
+                        SELECT *
+                        FROM customer
+                        WHERE cust_no = %(cust_no)s;
+                        """,
+                        {"cust_no": cust_no},
+                    ).fetchone()
+
+                    log.debug("Found 1 row.")
+
+                    products = cur.execute(
+                        """
+                        SELECT *
+                        FROM product
+                        WHERE NOT sku = '-1';
+                        """,
+                        {},
+                    ).fetchall()
+                    log.debug(f"Found {cur.rowcount} rows.")
+
+            return render_template("orders/add_order.html", error="Quantity must not be negative.", customer=customer, products=products)
 
     if re.search("^\d{4}-\d{2}-\d{2}$", request.form['date']) is None:
         return render_template("orders/add_order.html", error="Date must be in the format YYYY-MM-DD.")

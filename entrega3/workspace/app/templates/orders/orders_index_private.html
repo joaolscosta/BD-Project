@@ -80,7 +80,7 @@
   <h1 class="o-font-title">{{customer.name}}'s Orders</h1>
   <a
     class="btn btn-primary"
-    href="{{ url_for('add_order', cust_no=customer.cust_no) }}"
+    href="{{ url_for('add_order', cust_no=customer['cust_no']) }}"
     >Add Orders</a
   >
   {% endif %} {% endif %}
