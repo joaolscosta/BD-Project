@@ -1,36 +1,15 @@
- {% extends 'base/customer_page.html' %} {% block header %}
+{% extends 'base/customer_page.html' %} {% block header %}
 <h1>{% block title %}Create Customer{% endblock %}</h1>
 {% endblock %} {% block content %}
 
 <style>
-  .bodyyy {
-    width: 89%;
-    margin: 0 auto;
-  }
-
-  .title-bar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px 30px 0px 30px;
-  }
-
-  .title-bar h1 {
-    margin-left: 34%;
-    font-size: 3rem;
-    font-weight: bold;
-  }
-
-  .headeruwu {
-    margin: 0px 30px 0px 30px;
-  }
-
   .form-body {
     margin: 20px 30px 0px 30px;
   }
 
   .box {
+    margin-left: auto;
+    margin-right: auto;
     background: #eef0f1;
     border: 2px solid white;
     border-radius: 30px;
@@ -43,7 +22,6 @@
   }
 
   .box-title {
-    margin-left: 0.5%;
     text-align: center;
     font-size: 2rem;
     font-weight: bold;
@@ -90,68 +68,83 @@
   }
 </style>
 
-<div class="bodyyy">
-    <div class="title-bar">
-        <h1 style="text-align: center; margin: 0 auto;">Regist New Order</h1>
-    </div>
-    {% if customer %}
-      <hr class="headeruwu" />
-      <div class="box">
-        <div class="box-title">Check customer Data</div>
-        <div class="container">
-          <label for="name"><b>Name: {{ customer.name }}</b></label>
-          <p></p>
-          <label for="name"><b>Number: {{ customer.cust_no }}</b></label>
-          <p></p>
-          <label for="name"><b>Email: {{ customer.email }}</b></label>
-          <p></p>
-          <label for="name"><b>Phone: {{ customer.phone }}</b></label>
-          <p></p>
-          <label for="name"><b>Address: {{ customer.address }}</b></label>
-        </div>
-      </div>
-      <!-- Adicione o campo de entrada oculto para enviar o valor de customer.cust_no -->
-      <input type="hidden" name="cust_no" value="{{ customer.cust_no }}">
-    
-    
-    
-
-    <hr class="headeruwu" />
-    <div class="box">
-        <div class="box-title">Regist order</div>
-        <div class="container">
-            <form action="{{url_for('create_order')}}" method="POST">
-
-                <input type="hidden" name="cust_no" value="{{ customer.cust_no }}">
-
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="basic-addon1">Order Date</span>
-                  <input name="date" type="text" class="form-control" aria-describedby="basic-addon1" required>
-                </div>
-
-              
-                <div class="input-group mb-3">
-                  <span class="input-group-text">Select products:</span>
-                  {% for product in products %}
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="product{{ product.sku }}" name="selected_products[]" value="{{ product.sku }}">
-                      <label class="form-check-label" for="product{{ product.sku }}">
-                        {{ product.name }}
-                      </label>
-                      {% if product.sku in selected_products %}
-                        <input class="form-control" type="number" name="quantities[]" placeholder="Qty">
-                      {% else %}
-                        <input class="form-control" type="number" name="quantities[]" value="0" placeholder="Qty">
-                      {% endif %}
-                    </div>
-                  {% endfor %}
-                </div>
-                
-
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        </div>
-    </div>
-    {% endif %}
+<div class="title-bar">
+  <h1 class="o-font-title" style="text-align: center">Regist New Order</h1>
 </div>
-{% endblock %}
+
+{% if customer %}
+<hr class="hz-line" />
+<div class="box">
+  <div class="box-title">Check customer Data</div>
+  <div class="container">
+    <label for="name"><b>Name: {{ customer.name }}</b></label>
+    <p></p>
+    <label for="name"><b>Number: {{ customer.cust_no }}</b></label>
+    <p></p>
+    <label for="name"><b>Email: {{ customer.email }}</b></label>
+    <p></p>
+    <label for="name"><b>Phone: {{ customer.phone }}</b></label>
+    <p></p>
+    <label for="name"><b>Address: {{ customer.address }}</b></label>
+  </div>
+</div>
+<!-- Adicione o campo de entrada oculto para enviar o valor de customer.cust_no -->
+<input type="hidden" name="cust_no" value="{{ customer.cust_no }}" />
+<div class="space"></div>
+<hr class="hz-line" />
+<div class="box">
+  <div class="box-title">Regist order</div>
+  <div class="container">
+    <form action="{{url_for('create_order')}}" method="POST">
+      <input type="hidden" name="cust_no" value="{{ customer.cust_no }}" />
+
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">Order Date</span>
+        <input
+          name="date"
+          type="text"
+          class="form-control"
+          aria-describedby="basic-addon1"
+          required
+        />
+      </div>
+
+      <div class="input-group mb-3">
+        <span class="input-group-text">Select products:</span>
+        {% for product in products %}
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="product{{ product.sku }}"
+            name="selected_products[]"
+            value="{{ product.sku }}"
+          />
+          <label class="form-check-label" for="product{{ product.sku }}">
+            {{ product.name }}
+          </label>
+          {% if product.sku in selected_products %}
+          <input
+            class="form-control"
+            type="number"
+            name="quantities[]"
+            placeholder="Qty"
+          />
+          {% else %}
+          <input
+            class="form-control"
+            type="number"
+            name="quantities[]"
+            value="0"
+            placeholder="Qty"
+          />
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
+{% endif %} {% endblock %}

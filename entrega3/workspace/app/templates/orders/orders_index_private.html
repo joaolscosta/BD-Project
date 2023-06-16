@@ -2,10 +2,6 @@
 <h1>{% block title %}Orders{% endblock %}</h1>
 {% endblock %} {% block content %}
 <style>
-  .bodyyy {
-    width: 89%;
-    margin: 0 auto;
-  }
   .orders-list {
     margin: 20px 300px;
     display: flex;
@@ -66,23 +62,6 @@
     align-items: center;
   }
 
-  .title-bar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px 30px 0px 30px;
-  }
-
-  .title-bar h1 {
-    font-size: 3rem;
-    font-weight: bold;
-  }
-
-  .headeruwu {
-    margin: 0px 30px 0px 30px;
-  }
-
   .left-column {
     flex-basis: 50%;
   }
@@ -94,59 +73,51 @@
   .o-font {
     font-family: "Courier New", Courier, monospace;
   }
-
-  .o-font-title {
-    font-family: "Courier New", Courier, monospace;
-    color: #118bd2;
-  }
 </style>
 
-<div class="bodyyy">
-  <div class="title-bar">
-    {% if customer %} {% if customer.cust_no %}
-    <h1 class="o-font-title">{{customer.name}}'s Orders</h1>
-    <a
-      class="btn btn-primary"
-      href="{{ url_for('add_order', cust_no=customer.cust_no) }}"
-      >Add Orders</a
-    >
-    {% endif %} {% endif %}
+<div class="title-bar">
+  {% if customer %} {% if customer.cust_no %}
+  <h1 class="o-font-title">{{customer.name}}'s Orders</h1>
+  <a
+    class="btn btn-primary"
+    href="{{ url_for('add_order', cust_no=customer.cust_no) }}"
+    >Add Orders</a
+  >
+  {% endif %} {% endif %}
+</div>
+<hr class="hz-line" />
+<div class="orders-list">
+  <div class="left-column">
+    {% for order in orders %}
+    <div class="order">
+      <div class="f-number">
+        <p class="o-number o-font">Order number: {{ order['order_no'] }}</p>
+      </div>
+      {% set counter = increment_counter(order, contains) %}
+      <div class="f-footer">
+        <p class="o-qty o-font">Number of products: {{ counter }}</p>
+        <a
+          class="btn btn-outline-success"
+          href="{{ url_for('order_detail', order_no=order['order_no'])}}"
+          >Pay</a
+        >
+      </div>
+    </div>
+    {% endfor %}
   </div>
-  <hr class="headeruwu" />
-  <div class="orders-list">
-    <div class="left-column">
-      {% for order in orders %}
-      <div class="order">
-        <div class="f-number">
-          <p class="o-number o-font">Order number: {{ order['order_no'] }}</p>
-        </div>
-        {% set counter = increment_counter(order, contains) %}
-        <div class="f-footer">
-          <p class="o-qty o-font">Number of products: {{ counter }}</p>
-          <a
-            class="btn btn-outline-success"
-            href="{{ url_for('order_detail', order_no=order['order_no'])}}"
-            >Pay</a
-          >
-        </div>
-      </div>
-      {% endfor %}
-    </div>
 
-    <div class="right-column">
-      {% for pa in pay %}
-      <div class="order">
-        <div class="f-number">
-          <p class="o-number o-font">Order number: {{ pa['order_no'] }}</p>
-        </div>
-        <div class="f-footer">
-          <h2 class="o-paid o-font">Paid</h2>
-          <ion-icon name="bag-check-outline"></ion-icon>
-        </div>
+  <div class="right-column">
+    {% for pa in pay %}
+    <div class="order">
+      <div class="f-number">
+        <p class="o-number o-font">Order number: {{ pa['order_no'] }}</p>
       </div>
-      {% if not loop.last %} {% endif %} {% endfor %}
+      <div class="f-footer">
+        <h2 class="o-paid o-font">Paid</h2>
+        <ion-icon name="bag-check-outline"></ion-icon>
+      </div>
     </div>
+    {% if not loop.last %} {% endif %} {% endfor %}
   </div>
 </div>
-
 {% endblock %}

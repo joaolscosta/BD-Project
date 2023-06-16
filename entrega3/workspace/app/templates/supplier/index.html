@@ -2,44 +2,9 @@
 <h1>{% block title %}Suppliers{% endblock %}</h1>
 {% endblock %} {% block content %}
 <style>
-  .bodyyy {
-    width: 89%;
-    margin: 0 auto;
-  }
-
-  .o-font-title {
-    color: #005d93;
-  }
-
-  .title-bar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px 30px 0px 30px;
-  }
-
-  .title-bar h1 {
-    font-size: 3rem;
-    font-weight: bold;
-  }
-
-  .headeruwu {
-    margin: 0px 30px 0px 30px;
-  }
-
-  .bodyyy ol {
+  ol {
     margin: 20px 30px 20px 30px;
   }
-
-  /* .del-btn {
-    width: 33%;
-    display: flex;
-    flex-direction: row;
-    justify-content: right;
-    align-items: center;
-    margin: auto 0;
-  } */
 
   .lat-long {
     width: 33%;
@@ -96,70 +61,55 @@
     align-items: center;
     margin: auto 0;
   }
-
 </style>
-
-<div class="bodyyy">
-  <div class="title-bar">
-    <h1 class="o-font-title">Suppliers</h1>
-    <a class="btn btn-outline-primary" href="{{url_for('create_supplier')}}"
-      >Add Supplier</a
-    >
-  </div>
-  <hr class="headeruwu" />
-  <ol class="list-group list-group-numbered">
-    {% for supplier in suppliers %}
-    <li class="list-group-item d-flex justify-content-around align-items-start gap-15">
-      <div class="row-supplier">
-        <div class="ms-2 fixed-wid">
-          <div class="fw-bold">{{supplier['name']}}</div>
-          {{ supplier['address'] }}
-        </div>
-        <div class="lat-long">
-          <span class="badge bg-primary rounded-pill"
+<div class="title-bar">
+  <h1 class="o-font-title">Suppliers</h1>
+  <a class="btn btn-outline-primary" href="{{url_for('create_supplier')}}"
+    >Add Supplier</a
+  >
+</div>
+<hr class="hz-line" />
+<ol class="list-group list-group-numbered">
+  {% for supplier in suppliers %}
+  <li
+    class="list-group-item d-flex justify-content-around align-items-start gap-15"
+  >
+    <div class="row-supplier">
+      <div class="ms-2 fixed-wid">
+        <div class="fw-bold">{{supplier['name']}}</div>
+        {{ supplier['address'] }}
+      </div>
+      <div class="lat-long">
+        <span class="badge bg-primary rounded-pill"
           >{{supplier['product_name']}}</span
-          >
-          <span class="badge bg-primary rounded-pill">{{supplier['date']}}</span>
-        </div>
-        <!-- <div class="del-btn">
+        >
+        <span class="badge bg-primary rounded-pill">{{supplier['date']}}</span>
+      </div>
+      <div class="btn-placeholder fixed-wid">
+        <div class="del-btn">
           <form
-          action="{{ url_for('supplier_delete', tin=supplier['tin']) }}"
-          method="post"
-          >
-          <input
-          class="btn btn-danger remove-btn"
-          type="submit"
-          value="Delete"
-          onclick="return confirm('Are you sure?');"
-          />
-          </form>
-        </div> -->
-        <div class="btn-placeholder fixed-wid">
-          <div class="del-btn">
-            <form
             action="{{url_for('supplier_delete', tin=supplier['tin'])}}"
             method="post"
-            >
+          >
             <button onclick="return confirm('Are you sure?');">Delete</button>
           </form>
         </div>
       </div>
-      </div>
-    </li>
-    {% endfor %}
-  </ol>
-  <div class="pagination">
-    {% if current_page > 1 %}
-    <a href="?page={{ current_page - 1 }}" class="btn btn-primary">Previous</a>
-    {% endif %} {% for page_num in range(1, total_pages + 1) %}
-    <a
-      href="?page={{ page_num }}"
-      class="btn btn-primary{% if page_num == current_page %} active{% endif %}"
-      >{{ page_num }}</a
-    >
-    {% endfor %} {% if current_page < total_pages %}
-    <a href="?page={{ current_page + 1 }}" class="btn btn-primary">Next</a>
-    {% endif %}
-  </div>
+    </div>
+  </li>
+  {% endfor %}
+</ol>
+<div class="pagination">
+  {% if current_page > 1 %}
+  <a href="?page={{ current_page - 1 }}" class="btn btn-primary">Previous</a>
+  {% endif %} {% for page_num in range(1, total_pages + 1) %}
+  <a
+    href="?page={{ page_num }}"
+    class="btn btn-primary{% if page_num == current_page %} active{% endif %}"
+    >{{ page_num }}</a
+  >
+  {% endfor %} {% if current_page < total_pages %}
+  <a href="?page={{ current_page + 1 }}" class="btn btn-primary">Next</a>
+  {% endif %}
 </div>
 {% endblock %}

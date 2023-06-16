@@ -1,20 +1,15 @@
-{% extends 'base/customer_page.html' %}
-
-{% block header %}
+{% extends 'base/customer_page.html' %} {% block header %}
 <h1>{% block title %}Payment{% endblock %}</h1>
-{% endblock %}
+{% endblock %} {% block content %}
 
-{% block content %}
-
-<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+<script
+  src="https://code.jquery.com/jquery-3.7.0.js"
+  integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+  crossorigin="anonymous"
+></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <style>
-  .bodyyy {
-    width: 87%;
-    margin: 0 auto;
-  }
-
   .payment-container {
     display: flex;
     flex-direction: column;
@@ -56,7 +51,7 @@
     width: 100px;
     height: 40px;
     margin-top: 10px;
-    background-color: #4CAF50;
+    background-color: #4caf50;
     color: white;
     border: none;
     border-radius: 3px;
@@ -101,45 +96,47 @@
     display: none;
   }
 </style>
+<div class="payment-container">
+  <div class="f-number">
+    <h1 class="o-number">Payment for order number: {{order['order_no']}}</h1>
+  </div>
 
-<div class="bodyyy">
-  <div class="payment-container">
-    <div class="f-number">
-      <h1 class="o-number">Payment for order number: {{order['order_no']}}</h1>
+  {% for product in products %}
+  <div>
+    <p class="o-number">{{ product['name'] }}</p>
+    <p class="o-sku">Product SKU: {{ product['sku'] }}</p>
+    <p class="o-qty">Product quantity: {{ qty_list[loop.index0] }}</p>
+    <p class="o-qty">€ Product price: {{ product['price'] }}</p>
+  </div>
+  {% endfor %}
+
+  <div class="payment-form" method="post">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <p></p>
+      <input type="text" id="name" name="name" required />
     </div>
-    
-    {% for product in products %}
-      <div>
-          <p class="o-number">{{ product['name'] }}</p>
-          <p class="o-sku">Product SKU: {{ product['sku'] }}</p>
-          <p class="o-qty">Product quantity: {{ qty_list[loop.index0] }}</p>
-          <p class="o-qty">€ Product price:  {{ product['price'] }}</p>
-      </div>
-    {% endfor %}
-    
+    <div class="form-group">
+      <label for="card">Card Number:</label>
+      <p></p>
+      <input type="text" id="card" name="card" required />
+    </div>
+    <div class="f-footer">
+      <p class="o-qty">€ Total price: {{ order['cust_no'] }}</p>
+    </div>
 
-    <div class="payment-form" method="post">
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <p></p>
-        <input type="text" id="name" name="name" required>
-      </div>
-      <div class="form-group">
-        <label for="card">Card Number:</label>
-        <p></p>
-        <input type="text" id="card" name="card" required>
-      </div>
-      <div class="f-footer">
-        <p class="o-qty">€ Total price: {{ order['cust_no'] }}</p>
-      </div>
-
-      <div>
-        <form action="{{ url_for('pay_order') }}" method="post">
-          <input type="hidden" name="order_no" value="{{ order['order_no'] }}">
-          <input type="hidden" name="cust_no" value="{{ order['cust_no'] }}">
-          <input class="btn btn-outline-success" type="submit" id="pay-now-btn" value="Insert" onclick="return confirm('Are you sure?');">
-        </form>
-      </div>
+    <div>
+      <form action="{{ url_for('pay_order') }}" method="post">
+        <input type="hidden" name="order_no" value="{{ order['order_no'] }}" />
+        <input type="hidden" name="cust_no" value="{{ order['cust_no'] }}" />
+        <input
+          class="btn btn-outline-success"
+          type="submit"
+          id="pay-now-btn"
+          value="Insert"
+          onclick="return confirm('Are you sure?');"
+        />
+      </form>
     </div>
   </div>
 </div>

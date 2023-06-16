@@ -28,7 +28,9 @@
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>{% block title %}{% endblock %} - WebBusinessApp</title>
+    <title rel="icon" href="static/img/appicon.png" type="image/png">
+      {% block title %}{% endblock %} - WebBusinessApp
+    </title>
     <style>
       .main-content {
         padding-top: 56px;
@@ -44,7 +46,7 @@
   <body>
     <div class="main-content">
       <div>{% include 'base/components/navbar.html' %}</div>
-      <main>{% block content %} {% endblock %}</main>
+      <main class="page-body">{% block content %} {% endblock %}</main>
       <div>{% include 'base/components/footer.html' %}</div>
     </div>
   </body>

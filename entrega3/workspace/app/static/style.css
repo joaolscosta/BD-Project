@@ -11,6 +11,18 @@ body {
   background: white;
 }
 
+.body-login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container-login {
+  margin-bottom: 300px;
+}
+
 h1,
 h2,
 h3,
@@ -164,8 +176,42 @@ input[type="submit"] {
   background-color: #555;
 }
 
+.hz-line {
+  margin: 0px 30px 0px 30px;
+}
+
+.page-body {
+  width: 89%;
+  margin: 0 auto;
+}
+
+.o-font-title {
+  color: #005d93;
+}
+
 ion-icon {
   font-size: 50px;
   text-decoration: none;
   padding: 15px;
+}
+.space {
+  margin-top: 70px;
+}
+.title-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 30px 0px 30px;
+}
+.title-bar h1 {
+  font-family: sans-serif;
+  margin-left: 0;
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.title-bar h2 {
+  font-family: sans-serif;
+  font-size: 2rem;
 }

@@ -3,14 +3,6 @@
 {% endblock %} {% block content %}
 
 <style>
-  .body-customer {
-    width: 89%;
-    margin: 0 auto;
-  }
-
-  .o-font-title {
-    color: #005d93;
-  }
   .customer-list {
     margin: 20px 10px;
     display: flex;
@@ -61,22 +53,6 @@
     margin-top: 40px;
   }
 
-  .title-bar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px 30px 0px 30px;
-  }
-
-  .title-bar h1 {
-    font-size: 3rem;
-    font-weight: bold;
-  }
-  .title-bar h2 {
-    font-size: 2rem;
-  }
-
   .header-customer {
     margin: 0px 30px 0px 30px;
   }
@@ -109,56 +85,53 @@
   }
 </style>
 
-<div class="body-customer">
-  <div class="title-bar">
-    <h1 class="o-font-title">Customers</h1>
-    <a class="btn btn-primary" href="/customer/add">Add New Costumer</a>
-  </div>
-  <hr class="header-employee" />
+<div class="title-bar">
+  <h1 class="o-font-title">Customers</h1>
+  <a class="btn btn-primary" href="/customer/add">Add New Costumer</a>
+</div>
+<hr class="hz-line" />
 
-  <div class="container">
-    <div class="customer-list">
-      {% for customer in customers %}
-      <div class="customer">
-        <div class="f-header">
-          <h2>{{ customer.name }}</h2>
-          <h3>Number:{{ customer.cust_no }}</h3>
-        </div>
-        <hr />
-        <div class="f-body">
-          <p>{{ customer.email }}</p>
-          <p>{{ customer.phone }}</p>
-          <p>{{ customer.address }}</p>
-        </div>
-        <div class="f-footer">
-          <div class="del-btn">
-            <form
-              action="{{ url_for('customer_delete', cust_no=customer['cust_no']) }}"
-              method="post"
-            >
-              <button onclick="return confirm('Are you sure?');">Delete</button>
-            </form>
-          </div>
+<div class="container">
+  <div class="customer-list">
+    {% for customer in customers %}
+    <div class="customer">
+      <div class="f-header">
+        <h2>{{ customer.name }}</h2>
+        <h3>Number:{{ customer.cust_no }}</h3>
+      </div>
+      <hr />
+      <div class="f-body">
+        <p>{{ customer.email }}</p>
+        <p>{{ customer.phone }}</p>
+        <p>{{ customer.address }}</p>
+      </div>
+      <div class="f-footer">
+        <div class="del-btn">
+          <form
+            action="{{ url_for('customer_delete', cust_no=customer['cust_no']) }}"
+            method="post"
+          >
+            <button onclick="return confirm('Are you sure?');">Delete</button>
+          </form>
         </div>
       </div>
-      {% endfor %}
     </div>
+    {% endfor %}
+  </div>
 
-    <div class="pagination">
-      {% if current_page > 1 %}
-      <a href="?page={{ current_page - 1 }}" class="btn btn-primary"
-        >Previous</a
-      >
-      {% endif %} {% for page_num in range(1, total_pages + 1) %}
-      <a
-        href="?page={{ page_num }}"
-        class="btn btn-primary{% if page_num == current_page %} active{% endif %}"
-        >{{ page_num }}</a
-      >
-      {% endfor %} {% if current_page < total_pages %}
-      <a href="?page={{ current_page + 1 }}" class="btn btn-primary">Next</a>
-      {% endif %}
-    </div>
+  <div class="pagination">
+    {% if current_page > 1 %}
+    <a href="?page={{ current_page - 1 }}" class="btn btn-primary">Previous</a>
+    {% endif %} {% for page_num in range(1, total_pages + 1) %}
+    <a
+      href="?page={{ page_num }}"
+      class="btn btn-primary{% if page_num == current_page %} active{% endif %}"
+      >{{ page_num }}</a
+    >
+    {% endfor %} {% if current_page < total_pages %}
+    <a href="?page={{ current_page + 1 }}" class="btn btn-primary">Next</a>
+    {% endif %}
   </div>
 </div>
+
 {% endblock %}
