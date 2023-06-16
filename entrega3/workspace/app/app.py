@@ -91,7 +91,8 @@ def order_customer_page():
             count_order_main = cur.execute(
                 """
                 SELECT COUNT(*) as count
-                FROM orders;
+                FROM customer
+                WHERE cust_no >= 0;
                 """
             ).fetchone()
 
