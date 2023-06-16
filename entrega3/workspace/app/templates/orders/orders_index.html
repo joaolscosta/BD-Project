@@ -118,11 +118,6 @@
         {% set counter = increment_counter(order, contains) %}
         <div class="f-footer">
           <p class="o-qty o-font">Number of products: {{ counter }}</p>
-          <a
-            class="btn btn-outline-success"
-            href="{{ url_for('order_detail', order_no=order['order_no'])}}"
-            >Pay</a
-          >
         </div>
       </div>
       {% endfor %}

@@ -1039,9 +1039,10 @@ def customer_delete(cust_no):
 def increment_counter(order, contains):
     counter = 0
     for product in contains:
-        if order[0] == product[0]:
+        if order[0] == product[0] and product[2] > 0:
             counter += 1
     return counter
+
 
 
 
