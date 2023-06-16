@@ -256,3 +256,8 @@ ion-icon {
   align-items: center;
   margin: auto 0;
 }
+.carousel-item img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
