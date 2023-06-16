@@ -331,6 +331,7 @@ def add_order(cust_no):
                 """
                 SELECT *
                 FROM product
+                WHERE NOT sku = '-1';
                 """,
                 {},
             ).fetchall()
@@ -579,45 +580,13 @@ def delete_product(sku):
 
             cur.execute(
                 """
-                DELETE FROM process
-                WHERE order_no IN (
-                    SELECT order_no FROM contains WHERE SKU = %(SKU)s
-                );
-                """,
-                {"SKU": sku},
-            )
-            log.debug(f"Deleted from orders.")
-
-            cur.execute(
-                """
-                DELETE FROM pay
-                WHERE order_no IN (
-                    SELECT order_no FROM contains WHERE SKU = %(SKU)s
-                );
-                """,
-                {"SKU": sku},
-            )
-            log.debug(f"Deleted from orders.")
-
-            cur.execute(
-                """
-                DELETE FROM contains
+                UPDATE contains
+                SET SKU = -1
                 WHERE SKU = %(SKU)s;
                 """,
                 {"SKU": sku},
             )
             log.debug(f"Deleted from contains.")
-
-            cur.execute(
-                """
-                DELETE FROM orders
-                WHERE order_no IN (
-                    SELECT order_no FROM contains WHERE SKU = %(SKU)s
-                );
-                """,
-                {"SKU": sku},
-            )
-            log.debug(f"Deleted from orders.")
 
             cur.execute(
                 """
@@ -900,7 +869,8 @@ def customer_index():
             count = cur.execute(
                 """
                 SELECT COUNT(*) as count
-                FROM customer;
+                FROM customer 
+                WHERE cust_no >= 0;
                 """
             ).fetchone()
 
@@ -911,6 +881,7 @@ def customer_index():
                 """
                 SELECT cust_no, name, email, phone, address
                 FROM customer
+                WHERE cust_no >= 0
                 ORDER BY cust_no DESC
                 LIMIT {0} OFFSET {1};
                 """.format(per_page, offset),
@@ -987,16 +958,8 @@ def customer_delete(cust_no):
 
             cur.execute(
                 """
-                DELETE FROM customer
-                WHERE cust_no = %(cust_no)s;
-                """,
-                {"cust_no": cust_no},
-            )
-            log.debug(f"Deleted {cur.rowcount}")
-
-            cur.execute(
-                """
-                DELETE FROM orders 
+                UPDATE orders 
+                SET cust_no = -1
                 WHERE cust_no = %(cust_no)s;
                 """,
                 {"cust_no": cust_no},
@@ -1005,7 +968,17 @@ def customer_delete(cust_no):
             
             cur.execute(
                 """
-                DELETE FROM pay 
+                UPDATE pay 
+                SET cust_no = -1
+                WHERE cust_no = %(cust_no)s;
+                """,
+                {"cust_no": cust_no},
+            )
+            log.debug(f"Deleted {cur.rowcount}")
+
+            cur.execute(
+                """
+                DELETE FROM customer
                 WHERE cust_no = %(cust_no)s;
                 """,
                 {"cust_no": cust_no},
