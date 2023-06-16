@@ -289,6 +289,7 @@ def order_detail(order_no):
             log.debug(f"Found {cur.rowcount} rows.")
 
             qty_list = [contain[2] for contain in contains]
+            
 
             order = cur.execute(
                 """
@@ -311,8 +312,12 @@ def order_detail(order_no):
             ).fetchall()
             log.debug(f"Found {cur.rowcount} rows.")
 
+            price_list = [product[3] for  product in products]
+            result_list = [qty * price for qty, price in zip(qty_list, price_list)]
+            result_sum = sum(result_list)
+
     
-    return render_template("orders/order_payment.html", qty_list=qty_list, order=order, products=products)
+    return render_template("orders/order_payment.html", qty_list=qty_list, price_list=price_list, order=order, products=products, result_sum=result_sum)
 
 @app.route("/orders/add/<cust_no>", methods=("GET", "POST"))
 def add_order(cust_no):
