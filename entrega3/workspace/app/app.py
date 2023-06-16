@@ -45,7 +45,6 @@ log = app.logger
 @app.route("/", methods=("GET",))
 def index():
 
-
     return render_template("index.html")
 
 
@@ -74,10 +73,10 @@ def login():
         
         # If the username is not found, you can display an error message
         error_message = "Invalid name or cust_no"
-        return render_template("index.html", error_message=error_message)
+        return render_template("login_page.html", error_message=error_message)
     
     # Render the login page template for the initial GET request
-    return render_template("index.html")
+    return render_template("login_page.html")
 
 
 
