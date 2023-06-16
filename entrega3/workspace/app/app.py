@@ -453,7 +453,7 @@ def create_product():
     elif len(description) > 200:
         return render_template("products/create_product.html", error="Description must be less than 200 characters.")
     
-    elif re.search("^(([0-9]){1,13}$", ean) is None:
+    elif re.search("^([0-9]){1,13}$", ean) is None:
         return render_template("products/create_product.html", error="EAN must be 13 digits.")
 
     with pool.connection() as conn:
@@ -720,21 +720,8 @@ def suppliers():
 
 @app.route("/supplier/new", methods=("GET", "POST"))
 def create_supplier():
-    if request.method == "GET":
-        with pool.connection() as conn:
-            with conn.cursor(row_factory=namedtuple_row) as cur:
-                    products = cur.execute(
-                        """
-                        SELECT name, SKU from product;
-                        """,
-                        {},
-                    ).fetchall()
-                    log.debug(f"Found {cur.rowcount} rows.")
-        
-        return render_template("supplier/create_supplier.html", products=products, error=False)
-    
-    else:
-
+    error = False
+    if request.method == "POST":
         name = request.form["name"]
         tin = request.form["tin"]
         address = request.form["address"]
@@ -742,38 +729,50 @@ def create_supplier():
         sku = request.form["sku"]
 
         if len(tin) > 20:
-            return render_template("supplier/create_supplier.html", error="TIN must be less than 20 characters.")
+            error = "TIN must be less than 20 characters."
         
         if len(name) > 200:
-            return render_template("supplier/create_supplier.html", error="Name must be less than 200 characters.")
+            error="Name must be less than 200 characters."
 
         if len(address) > 255:
-            return render_template("supplier/create_supplier.html", error="Address must be less than 255 characters.")
+            error="Address must be less than 255 characters."
         
         if re.search("^\d{4}-\d{2}-\d{2}$", date) is None:
-            return render_template("supplier/create_supplier.html", error="Date must be in YYYY-MM-DD format.")
+            error="Date must be in YYYY-MM-DD format."
         
 
+        if error is False:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=namedtuple_row) as cur:
+                    cur.execute(
+                        """
+                        INSERT INTO supplier (name, tin, address, date, SKU)
+                        VALUES (%(name)s, %(tin)s, %(address)s, %(date)s, %(sku)s);
+                        """,
+                        {
+                            "name": name,
+                            "tin": tin,
+                            "address": address,
+                            "date": date,
+                            "sku": sku,
+                        },
+                    )
+                    log.debug(f"Inserted into supplier.")
+            
+            return redirect(url_for("suppliers"))
 
-        with pool.connection() as conn:
-            with conn.cursor(row_factory=namedtuple_row) as cur:
-                cur.execute(
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+                products = cur.execute(
                     """
-                    INSERT INTO supplier (name, tin, address, date, SKU)
-                    VALUES (%(name)s, %(tin)s, %(address)s, %(date)s, %(sku)s);
+                    SELECT name, SKU from product
+                    WHERE NOT SKU = '-1';
                     """,
-                    {
-                        "name": name,
-                        "tin": tin,
-                        "address": address,
-                        "date": date,
-                        "sku": sku,
-                    },
-                )
-                log.debug(f"Inserted into supplier.")
+                    {},
+                ).fetchall()
+                log.debug(f"Found {cur.rowcount} rows.")
         
-        return redirect(url_for("suppliers"))
-                
+    return render_template("supplier/create_supplier.html", products=products, error=error)
 
 @app.route("/supplier/<tin>/delete", methods=("POST",))
 def supplier_delete(tin):
