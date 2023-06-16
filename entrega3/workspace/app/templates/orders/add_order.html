@@ -104,6 +104,11 @@
 <input type="hidden" name="cust_no" value="{{ customer.cust_no }}" />
 <div class="space"></div>
 <hr class="hz-line" />
+{% if error %}
+<div class="alert alert-danger margins-basic" role="alert">
+  {{error}}
+</div>
+{% endif %}
 <div class="box">
   <div class="box-title">Regist order</div>
   <div class="container">

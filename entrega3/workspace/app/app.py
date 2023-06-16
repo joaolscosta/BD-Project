@@ -494,15 +494,19 @@ order_no_count = 0;
 def create_order():
     global order_no_count
     if request.method == "GET":
-        return render_template("orders/create_order.html")
+        return render_template("orders/add_order.html", error=False)
     
 
     
     selected_products = request.form.getlist('selected_products[]')
     quantities = request.form.getlist('quantities[]')
 
+    for quantity in quantities:
+        if int(quantity) < 0:
+            return render_template("orders/add_order.html", error="Quantity must not be negative.")
+
     if re.search("^\d{4}-\d{2}-\d{2}$", request.form['date']) is None:
-        return render_template("orders/create_order.html", error="Date must be in the format YYYY-MM-DD.")
+        return render_template("orders/add_order.html", error="Date must be in the format YYYY-MM-DD.")
 
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
