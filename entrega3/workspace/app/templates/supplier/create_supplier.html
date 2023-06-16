@@ -16,6 +16,10 @@
     margin: 20px 30px 0px 30px;
   }
 
+  .o-font-title {
+    color: #005d93;
+  }
+
   .title-bar h1 {
     margin-left: 34%;
     font-size: 3rem;
@@ -91,49 +95,62 @@
 </style>
 
 <div class="bodyyy">
-    <div class="title-bar">
-        <h1 style="text-align: center; margin: 0 auto;">Create new supplier</h1>
-    </div>
-      <hr class="headeruwu" />
-    <hr class="headeruwu" />
-    <div class="box">
-        <div class="box-title">Regist Supplier</div>
-        <div class="container">
-            <form action="{{url_for('create_supplier')}}" method="POST">
-                <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">name</span>
-                    <input name="name" type="text" class="form-control" aria-describedby="basic-addon1" required>
-                </div>
-
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="basic-addon1">address</span>
-                  <input name="address" type="text" class="form-control" aria-describedby="basic-addon1" required>
-                </div>
-               
-
-                <div>
-                    <label for="sku">Select a product:</label>
-                    <select id="sku" name="sku">
-                        <option value="">-- Select a product --</option>
-                        {% for product in products %}
-                        <option value="{{product.sku}}">{{ product.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="input-group mb-3">
-                  <span class="input-group-text">date</span>
-                  <input name="date" type="date" >
-                </div>
-
-                <div class="input-group mb-3">
-                  <span class="input-group-text">TIN</span>
-                  <input name="tin" type="text">
-                </div>
-
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+  <div class="title-bar">
+    <h1 class="o-font-title" style="text-align: center; margin: 0 auto">
+      Create new supplier
+    </h1>
+  </div>
+  <hr class="headeruwu" />
+  <hr class="headeruwu" />
+  <div class="box">
+    <div class="box-title">Regist Supplier</div>
+    <div class="container">
+      <form action="{{url_for('create_supplier')}}" method="POST">
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">name</span>
+          <input
+            name="name"
+            type="text"
+            class="form-control"
+            aria-describedby="basic-addon1"
+            required
+          />
         </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">address</span>
+          <input
+            name="address"
+            type="text"
+            class="form-control"
+            aria-describedby="basic-addon1"
+            required
+          />
+        </div>
+
+        <div>
+          <label for="sku">Select a product:</label>
+          <select id="sku" name="sku">
+            <option value="">-- Select a product --</option>
+            {% for product in products %}
+            <option value="{{product.sku}}">{{ product.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">date</span>
+          <input name="date" type="date" />
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">TIN</span>
+          <input name="tin" type="text" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
     </div>
+  </div>
 </div>
 {% endblock %}
