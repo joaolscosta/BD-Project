@@ -32,24 +32,71 @@
     margin: 20px 30px 20px 30px;
   }
 
-  .del-btn {
+  /* .del-btn {
+    width: 33%;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: right;
     align-items: center;
     margin: auto 0;
-  }
+  } */
 
   .lat-long {
-    width: 70%;
+    width: 33%;
     justify-self: left;
     display: flex;
     flex-direction: row;
     justify-content: left;
     align-items: center;
-    margin: auto 0px auto 40px;
-    gap: 40px;
+    margin: auto 0px auto 0px;
+    gap: 3rem;
   }
+
+  .row-supplier {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+  }
+
+  .fixed-wid {
+    width: 33%;
+  }
+
+  .del-btn {
+    background-color: #ff4d40;
+    border: none;
+    color: white;
+    padding: 7px;
+    padding-left: 12px;
+    padding-right: 12px;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    font-size: 15px;
+    border-radius: 7px;
+    cursor: pointer;
+  }
+
+  .del-btn button {
+    color: white;
+  }
+
+  .del-btn:hover {
+    background: #ff1500;
+    transition: 0.4s;
+  }
+
+  .btn-placeholder {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    margin: auto 0;
+  }
+
 </style>
 
 <div class="bodyyy">
@@ -62,30 +109,41 @@
   <hr class="headeruwu" />
   <ol class="list-group list-group-numbered">
     {% for supplier in suppliers %}
-    <li class="list-group-item d-flex justify-content-around align-items-start">
-      <div class="ms-2 me-auto">
-        <div class="fw-bold">{{supplier['name']}}</div>
-        {{ supplier['address'] }}
-      </div>
-      <div class="lat-long">
-        <span class="badge bg-primary rounded-pill"
+    <li class="list-group-item d-flex justify-content-around align-items-start gap-15">
+      <div class="row-supplier">
+        <div class="ms-2 fixed-wid">
+          <div class="fw-bold">{{supplier['name']}}</div>
+          {{ supplier['address'] }}
+        </div>
+        <div class="lat-long">
+          <span class="badge bg-primary rounded-pill"
           >{{supplier['product_name']}}</span
-        >
-        <span class="badge bg-primary rounded-pill">{{supplier['date']}}</span>
-      </div>
-      <div class="del-btn">
-        <!-- ESTA PORRA DEIXOU DE FUNCIONAR PORQUE MUDEI PARA FORMS-->
-        <form
+          >
+          <span class="badge bg-primary rounded-pill">{{supplier['date']}}</span>
+        </div>
+        <!-- <div class="del-btn">
+          <form
           action="{{ url_for('supplier_delete', tin=supplier['tin']) }}"
           method="post"
-        >
+          >
           <input
-            class="btn btn-danger remove-btn"
-            type="submit"
-            value="Delete"
-            onclick="return confirm('Are you sure?');"
+          class="btn btn-danger remove-btn"
+          type="submit"
+          value="Delete"
+          onclick="return confirm('Are you sure?');"
           />
-        </form>
+          </form>
+        </div> -->
+        <div class="btn-placeholder fixed-wid">
+          <div class="del-btn">
+            <form
+            action="{{url_for('supplier_delete', tin=supplier['tin'])}}"
+            method="post"
+            >
+            <button onclick="return confirm('Are you sure?');">Delete</button>
+          </form>
+        </div>
+      </div>
       </div>
     </li>
     {% endfor %}
