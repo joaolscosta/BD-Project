@@ -203,20 +203,9 @@ def orders_index(cust_no):
 def orders_index_private(cust_no):
 
 
-    page_order = request.args.get("page", 1, type=int)
-    per_page_order = 9
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
             
-            count_order = cur.execute(
-                """
-                SELECT COUNT(*) as count
-                FROM orders;
-                """
-            ).fetchone()
-            
-            total_pages_order = math.ceil(count_order[0] / per_page_order)
-            offset_order= (page_order - 1) * per_page_order
             
             orders = cur.execute(
                 """
@@ -228,9 +217,8 @@ def orders_index_private(cust_no):
                     FROM pay
                     WHERE pay.order_no = orders.order_no
                 )
-                ORDER BY order_no
-                LIMIT {0} OFFSET {1};
-                """.format(per_page_order, offset_order),
+                ORDER BY order_no;
+                """,
                 {"cust_no": cust_no},
             ).fetchall()
             log.debug(f"Found {cur.rowcount} rows.")
@@ -245,9 +233,8 @@ def orders_index_private(cust_no):
                     FROM pay
                     WHERE pay.order_no = orders.order_no
                 )
-                ORDER BY order_no
-                LIMIT {0} OFFSET {1};
-                """.format(per_page_order, offset_order),
+                ORDER BY order_no;
+                """,
                 {"cust_no": cust_no},
             ).fetchall()
             log.debug(f"Found {cur.rowcount} rows.")
@@ -282,7 +269,7 @@ def orders_index_private(cust_no):
         and not request.accept_mimetypes["text/html"]
     ):
         return jsonify(orders)
-    return render_template("orders/orders_index_private.html", increment_counter=increment_counter,orders=orders, pay=pay, customer=customer,contains=contains,current_page=page_order, total_pages=total_pages_order)
+    return render_template("orders/orders_index_private.html", increment_counter=increment_counter,orders=orders, pay=pay, customer=customer,contains=contains)
 
 
 @app.route("/orders/<order_no>/", methods=("GET",))
